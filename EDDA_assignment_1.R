@@ -19,10 +19,7 @@ shapiro_wilk <- shapiro.test(data)
 cat(sprintf("Shapiro Wilk test W: %.4f\n", shapiro_wilk[[1]]))
 cat(sprintf("Shapiro Wilk test p-value: %.4f\n", shapiro_wilk[[2]]))
 
-
-
-
-# construct a bounded 96%-CI for mu(mean) 
+# Calculate the upper bound and lower bound CI 
 lower_bound <- t.test(data,conf.level=0.96)[[4]][[1]]
 upper_bound <- t.test(data,conf.level=0.96)[[4]][[2]]
 # Print bounds
@@ -34,56 +31,29 @@ xbar <- mean(data)
 stnd <-sd(data)
 
 # Calculate standard error of the mean
-SEM <- stnd / sqrt(length(x))
+SEM <- stnd / sqrt(length(data))
 # Calculate margin of error for a 96% confidence level
 z <- qnorm(0.98) # 98th percentile of standard normal distribution
 ME <- z * SEM
 # Print margin of error
 cat("Margin of error:", round(ME, 2), "\n")
 
-CI <-2*ME
-cat(CI)
-n= sqrt((z*stnd)/ME)
-cat(n)
-
-# Compute the minimum sample size for the error length to be 100
-min_n = ((t_alpha)^2 * s^2) / 50^2
-cat(sprintf("Minimum sample size for error length 100: %f\n", min_n))
-
-# Compute bootstrap 96%-CI for the mean and compare to the bounded CI
-B=1000
-Tstar=numeric(B)
-for(i in 1:B) {
-  Xstar=sample(birthweight,replace=TRUE)
-  Tstar[i]=mean(Xstar)}
-Tstar25=quantile(Tstar,0.02)
-Tstar975=quantile(Tstar,0.98)
-sum(Tstar<Tstar25)
-T1 = mean(birthweight)
-c(2*T1-Tstar975,2*T1-Tstar25)
-
-
-sample_mean = mean ( data ) # point estimate
-margin_of_error = qnorm (0.98 )*( sd( data )/ sqrt ( length ( data )))
-lower_bound_1 = sample_mean - margin_of_error
-upper_bound_1 = sample_mean + margin_of_error
-confidence_interval <- c( lower_bound_1 , upper_bound_1 )
-
-birthweight= data
-alpha = 0.04
-mean = mean(birthweight)
-s = sd(birthweight)
-n = length(birthweight)
-t_alpha = qt(1 - (alpha/2), df=n-1)
-error = t_alpha * (s / sqrt(n))
-lower_bound = mean - error
-upper_bound = mean + error
-ci = c(lower_bound, upper_bound)
-cat(sprintf("Bounded 96%%-CI: [%f, %f]\n", ci[1], ci[2]))
-
-# Compute the minimum sample size for the error length to be 100
-min_n = ((t_alpha)^2 * s^2) / 50^2
-cat(sprintf("Minimum sample size for error length 100: %f\n", min_n))
+# construct a bounded 96%-CI for mu(mean) 
+for (sample_size in 1:1000) {
+  lower_bound = xbar - z*stnd/sqrt(sample_size)
+  upper_bound = xbar + z*stnd/sqrt(sample_size)
+  CI_length <- upper_bound - lower_bound
+  if (CI_length <= 100) {
+    break
+  }
+}
+sample_size
+CI_length
 
 
 
+library(boot)
+B <- 1000 # Choose number of bootstrap resamples
+boot_data <- boot(data, statistic = function(data, i) mean(data[i]), R = B)
+boot_ci <- boot.ci(boot_data, type = "perc", conf = 0.96)
+boot_ci
