@@ -51,9 +51,12 @@ sample_size
 CI_length
 
 
-
+# Compute a bootstrap 96%-CI for mu and compare it to the above CI.
 library(boot)
 B <- 1000 # Choose number of bootstrap resamples
 boot_data <- boot(data, statistic = function(data, i) mean(data[i]), R = B)
 boot_ci <- boot.ci(boot_data, type = "perc", conf = 0.96)
 boot_ci
+lower_bound_boot_ci <- boot_ci$percent[[4]]
+upper_bound_boot_ci <- boot_ci$percent[[5]]
+
