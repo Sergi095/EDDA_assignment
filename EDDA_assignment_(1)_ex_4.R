@@ -32,8 +32,28 @@ npk_no_nitrogen  <- npk[npk$N == 0,]
 # Calculate the average yield per block for plots without nitrogen treatment
 no_nitrogen_avg_yield  <- aggregate(yield ~ block, data = npk_no_nitrogen, FUN = mean)
 
-# Make a plot comparing the average yield per block for nitrogen and no nitrogen treatments
-plot(nitrogen_avg_yield$Block, nitrogen_avg_yield$Yield, ylim = range(c(nitrogen_avg_yield$Yield, no_nitrogen_avg_yield$Yield)), xlab = "Block", ylab = "Average Yield (lbs/plot)", main = "Average Yield per Block with and without Nitrogen Treatment")
-points(no_nitrogen_avg_yield$Block, no_nitrogen_avg_yield$Yield, col = "red")
-legend("topright", legend = c("Nitrogen Treatment", "No Nitrogen Treatment"), col = c("black", "red"), pch = 1)
 
+
+# Make a boxplot comparing the average yield per block for nitrogen and no nitrogen treatments
+boxplot(no_nitrogen_avg_yield$yield, nitrogen_avg_yield$yield, 
+        names = c("No Nitrogen Treatment", "Nitrogen Treatment"), ylab = "yield")
+
+
+
+legend("topleft", legend = c("Nitrogen Treatment", "No Nitrogen Treatment"))
+
+ddf = structure(list(no_nitrogen_avg_yield$yield,nitrogen_avg_yield$yield),
+                .Names = c("No Nitrogen Treatment", "Nitrogen Treatment"), class = "data.frame")
+
+barplot(c(no_nitrogen_avg_yield$yield,nitrogen_avg_yield$yield),                                         # Create grouped barchart
+        col = c("#1b98e0", "#353436"),beside = TRUE, xlab="blocks",ylab = "yield",
+        ylim=c(0,90))
+axis(side = 1, at = 1.5, labels =( "1"))
+axis(side = 1, at = 4, labels =( "2"))
+axis(side = 1, at = 6.5, labels =( "3"))
+axis(side = 1, at = 9, labels =( "4"))
+axis(side = 1, at = 11.5, labels =( "5"))
+axis(side = 1, at = 13.5, labels =( "6"))
+legend("topright",                                    # Add legend to barplot
+       legend = c("Nitrogen Treatment", "No Nitrogen Treatment"),
+       fill = c("#1b98e0", "#353436"))
