@@ -280,7 +280,7 @@ data_frame <- data.frame(random_plots_matrix)
 header <- c("plot", "block", "N", "P", "K")
 colnames(data_frame) <- header
 #View the resulting data frame
-data_frame
+head(data_frame)
 ```
 
 **B)**
