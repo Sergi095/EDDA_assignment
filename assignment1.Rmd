@@ -22,6 +22,7 @@ data= birthweight$birthweight
 
 ```{r}
 qqnorm(data, main = "Normal Q-Q Plot of Birthweight")
+qqline(data,col=" red ")
 
 # Check for normality with histogram
 hist(x = data,breaks=15,main = "Histogram of Birthweights",
@@ -312,7 +313,33 @@ legend("topleft", legend = c("Nitrogen Treatment", "No Nitrogen Treatment"),
 
 ```
 
-**C)**
+**C)** Check for normality with QQ plot,histogram, and boxplot
+
+```{r}
+# Check for normality with histogram
+hist(x = npk$yield , breaks=7 ,main = "Histogram of yield",
+     xlab = " yield ",freq = FALSE)
+lines(x= density(x= npk$yield), col=" red ")
+
+qqnorm(npk$yield)
+qqline(npk$yield)
+
+# Check for normality with boxplot
+boxplot (npk$yield , main =" Boxplot of yield ",
+         xlab =" yield ",horizontal = TRUE)
+
+```
+
+the density displays a bell-shaped curve that resembles a normal distribution. The QQ-plot also appears to follow a straight line, indicating normality of the data. The boxplot exhibits some asymmetry so the data is normally distributed.
+
+```{r}
+shapiro.test(npk$yield)
+
+```
+
+the p-value of the test is greater than 0.05, we can assume that the data is normally distributed. In this case, the p-value is 0.8735, which suggests that the data is normally distributed.
+
+Given that the data appears to be normally distributed, we can proceed with conducting a two-way ANOVA with the response variable yield and the two factors block and N:
 
 ```{r}
 fit <- aov(yield ~ block + N, data = npk)
