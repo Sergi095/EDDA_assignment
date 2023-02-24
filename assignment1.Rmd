@@ -313,7 +313,13 @@ legend("topleft", legend = c("Nitrogen Treatment", "No Nitrogen Treatment"),
 
 ```
 
-**C)** Check for normality with QQ plot,histogram, and boxplot
+we can see that the average yield per block for the soil treated with nitrogen is higher than the average yield per block for the soil that did not receive nitrogen. This suggests that nitrogen had a positive effect on the yield of the crops.
+
+It is important to take the factor block into account because it helps to control for any differences in yield that may be due to variation in the environment across different blocks. By including block as a factor, we can estimate the effect of nitrogen on yield while controlling for any potential confounding effects of block. This helps to increase the accuracy and reliability of the estimated effect of nitrogen on yield.
+
+**C)**
+
+Check for normality with QQ plot,histogram, and boxplot
 
 ```{r}
 # Check for normality with histogram
