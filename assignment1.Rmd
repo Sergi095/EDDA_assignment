@@ -185,6 +185,116 @@ A Two-sample t-test was conducted to examine whether the mean weight differs for
 
 ## Exercise 2
 
+**A)**
+
+```{r}
+summary(cholesterol)
+
+# Regression the 2 variables are highly correlated
+ggplot(cholesterol, aes(x = Before, y = After8weeks)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Before", y = "After 8 weeks", title = "Scatter plot of cholesterol levels")
+cor(cholesterol$Before, cholesterol$After8weeks)
+
+
+# creating histograms
+ggplot(cholesterol, aes(x = Before)) +
+  geom_histogram(binwidth = 0.8) +
+  labs(x = "Before", y = "Count", title = "Histogram of cholesterol levels before diet")
+
+shapiro.test(before) # accept null, data is normal
+
+ggplot(cholesterol, aes(x = After8weeks)) +
+  geom_histogram(binwidth = 0.8) +
+  labs(x = "After 8 weeks", y = "Count", title = "Histogram of cholesterol levels after 8 weeks on diet")
+shapiro.test(after) # accept null, data is normal
+# checking difference
+diff <- cholesterol$Before - cholesterol$After8weeks
+
+ggplot(cholesterol, aes(x = Before - After8weeks)) +
+  geom_histogram(binwidth = 0.2) +
+  labs(x = "Difference in cholesterol levels", y = "Count", title = "Histogram of differences before and after diet")
+
+shapiro.test(diff) # accept null, data is normal
+```
+
+**B)** Given that the data set contains measurements of cholesterol levels before and after a low fat low cholesterol diet with the same individuals, the data are paired. Therefore, we can use paired tests to analyze the data.
+
+```{r}
+wilcox.test(cholesterol$Before, cholesterol$After8weeks, paired = TRUE)
+#strong evidence to suggest that the margarine diet #had an effect on cholesterol levels.
+```
+
+in this case, a permutation test is not applicable since we only have one group of paired data. Permutation tests are typically used for comparing two independent groups of data.
+
+**C)**
+
+```{r}
+# Calculate estimate for theta
+theta_hat <- 2*mean(cholesterol$After8weeks) - 3
+sigma <- sqrt((theta_hat-3)^2/12)
+
+n <- length(cholesterol$After8weeks)
+z <- qnorm(0.975)
+
+lower <- theta_hat - z*(sigma/sqrt(n))
+upper <- theta_hat + z*(sigma/sqrt(n))
+#confidence interval
+c(lower, upper)
+```
+
+**D)**
+
+```{r}
+# H0: X1, ..., X18 ~ Unif[3, theta]
+
+# T = max(X1, ..., X18)
+
+# Bootstrap test
+# 1. Generate B samples of size n from the null distribution
+# 2. Calculate the test statistic for each sample
+# 3. Calculate the p-value as the proportion of test statistics that are
+# greater than or equal to the observed test statistic
+
+# 1. Generate B samples of size n from the null distribution
+B <- 1000
+n <- length(cholesterol$After8weeks)
+theta <- seq(3, 12, by = 0.1)
+T <- rep(0, length(theta))
+for (i in 1:length(theta)) {
+  T[i] <- max(runif(n, min = 3, max = theta[i]))
+}
+
+# 2. Calculate the test statistic for each sample
+T_obs <- max(cholesterol$After8weeks)
+
+# 3. Calculate the p-value as the proportion of test statistics that are greater than or equal to the observed test statistic
+p_value <- sum(T >= T_obs)/B
+p_value
+```
+
+Can the Kolmogorov-Smirnov test be also applied for this situation? No, the Kolmogorov-Smirnov test is not applicable in this case since the null hypothesis is not a continuous distribution. The Kolmogorov-Smirnov test is used to compare a sample to a continuous distribution. In this case, the null hypothesis is a discrete distribution.
+
+**E)**
+
+```{r}
+# H0: median = 6
+# H1: median < 6
+
+# H0: p <= 0.25
+# H1: p > 0.25
+
+# Median test
+median_test <- wilcox.test(cholesterol$After8weeks, mu = 6, alternative = "less")
+median_test
+
+# Proportion test
+proportion_test <- prop.test(sum(cholesterol$After8weeks < 4.5), length(cholesterol$After8weeks), p = 0.25, alternative = "greater")
+proportion_test
+
+```
+
 ## Exercise 3
 
 ```{r echo=FALSE}
