@@ -86,6 +86,11 @@ binom.test(sum(data > 2800), n=length(data), p = 0.5, alternative = "greater")
 
 ###----------####
 ## C
+power.t.test(n = length(birthweight$birthweight), delta = (2800 - mean(birthweight$birthweight)) / 
+               sd(birthweight$birthweight), 
+             sd = sd(birthweight$birthweight), sig.level = 0.05, type = "one.sample", alternative = "two.sided")
+
+
 B = 1000; n = 50
 psign = numeric(B) # will contain P-values of sign test
 pttest = numeric(B) # will contain P-values of T test

@@ -71,7 +71,15 @@ summary(model)
 # since there is only one observation per combination of block and N.
 
 
+df = MASS::npk
+df_nitrogen = dplyr::filter(df, N == 1)
+df_no_nitrogen =  dplyr::filter(df, N == 0)
+par(mfrow=c(1,2))
+boxplot(yield ~ block, data=df_nitrogen, main="yield with nitrogen"); boxplot(yield ~ block, data=df_no_nitrogen, main='yield without nitrogen')
 
 
-
-
+df$block = as.factor(df$block)
+df$N = as.factor(df$N)
+anovaN = lm(yield ~ block * N,data=df);anova(anovaN)
+par(mfrow=c(1,2))
+qqnorm(residuals(anovaN));qqline(residuals(anovaN),col='red',p) ;plot(fitted(anovaN),residuals(anovaN))

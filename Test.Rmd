@@ -92,38 +92,38 @@ Since the sample is assumed to follow a normal distribution, the bootstrapped co
 
 ```{r}
 # Verify this claim by using a one side t-test
-t.test(data, mu = 2800, alternative = "greater")
+t.test(data, mu = 2800, alternative = "less")
 ```
 
-performed a one-sample t-test with the null hypothesis(H0) that the mean birthweight is equal to 2800 grams (mu = 2800) and the alternative hypothesis(H1) that the mean birthweight is bigger than 2800 grams.The p-value is leaa than the confidence level of 0.05, which does give evidence against the null hypothesis. Therefore, we reject the null hypothesis and conclude that the mean birthweight is greater than 2800 grams. The confidence interval (CI) in the R-output for this test represents a range of values within which the true population mean birthweight is likely to fall with a certain degree of confidence. For a one-tailed test, we only obtain either a lower bound or upper bound, which we call a one-sided confidence interval. In our case, we only obtained a lower bound CI [2829.202  Inf].
+performed a one-sample t-test with the null hypothesis(H0) that the mean birthweight is bigger than 2800 grams (mu = 2800) and the alternative hypothesis(H1) that the mean birthweight is less than 2800 grams.The p-value is bigger than the significance level of 0.05, which does not give evidence against the null hypothesis. Therefore, we do not reject the null hypothesis and conclude that the mean birthweight is greater than 2800 grams. The confidence interval (CI) in the R-output for this test represents a range of values within which the true population mean birthweight is likely to fall with a certain degree of confidence. and we get CI [-inf 2997.2] because we used one side t-test and we are looking for the upper bound of CI.
 
 ```{r}
 # sign test
-binom.test(sum(data > 2800), n=length(data), p = 0.5, alternative = "greater")
+binom.test(sum(data > 2800), n=length(data), p = 0.5, alternative = "less")
 ```
 
-The p-value is less than the confidence level of 0.05, which does give evidence against the null hypothesis. Therefore, we reject the null hypothesis and conclude that the mean birthweight is bigger than 2800 grams.
+The p-value is grater than the significance level of 0.05, which does not give evidence against the null hypothesis. Therefore, we do not reject the null hypothesis and conclude that the mean birthweight is bigger than 2800 grams.
 
 **C)**
 
 the powers of the t-test and sing
 
 ```{r}
-B = 1000; n = 50
+B = 100; n = 50
 psign = numeric(B) # will contain P-values of sign test
 pttest = numeric(B) # will contain P-values of T test
 
 for(i in 1:B) {
   x = sample(data, n)
-  pttest[i] = t.test(x, mu=2800, alt='greater')[[3]] # extract P-value
-  psign[i] = binom.test(sum(x>2800), n, alt='greater')[[3]] # extract P-value
+  pttest[i] = t.test(x, mu=2800, alt='less')[[3]] # extract P-value
+  psign[i] = binom.test(sum(x>2800), n, alt='less')[[3]] # extract P-value
 }
 power_ttest = sum(pttest<0.05)/B
 power_sign = sum(psign<0.05)/B
 cat("the powers of the t-test: ", power_ttest, ",  the powers of the sing test: ", power_sign, sep = "")
 ```
 
-One way to compute the power of the tests is through simulation.The estimated power of the one-sided t-test is 0.301, meaning that if the true population mean is actually 2913.293 (as estimated from the data), there is a 30% chance that the t-test will correctly reject the null hypothesis of a mean of 2800. The estimated power of the sign test is 0.175, meaning that there is a 17.5% chance that the sign test will correctly reject the null hypothesis of a median of 2800. These power estimates suggest that the t-test may be more powerful than the sign test for detecting a difference in the mean above 2800.
+One way to compute the power of the tests is through simulation. the estimated powers of the one-sided t-test and sign test are calculated to be 0.00 and 0.00, respectively. These estimated powers suggest that the tests have a very low probability of rejecting the null hypothesis when the true population mean is greater than 2800.
 
 **D)** Recover the whole confidence interval and its confidence level.
 
