@@ -13,7 +13,7 @@ header <- c("plot", "block", "N", "P", "K")
 colnames(data_frame) <- header
 #View the resulting data frame
 head(data_frame)
-
+data_frame
 
 ######----- B -------#####
 
@@ -33,6 +33,7 @@ boxplot(no_nitrogen_avg_yield$yield, nitrogen_avg_yield$yield,
 
 avg_yield <- apply(cbind(nitrogen_avg_yield[[2]], no_nitrogen_avg_yield[[2]]),1,function(x) unname(unlist(x)))
 rownames(avg_yield)<- c("nitrogen_avg_yield","no_nitrogen_avg_yield")
+avg_yield
 
 barplot(avg_yield, col = c("#1b98e0", "#353436"),beside = TRUE,
         xlab="blocks",ylab = "yield", ylim=c(0,90),
@@ -43,9 +44,13 @@ legend("topleft", legend = c("Nitrogen Treatment", "No Nitrogen Treatment"),
 
 
 ######----- D -------#####
+qqnorm(npk$yield)
+qqline(npk$yield)
 
-fit <- aov(yield ~ block + N, data = npk)
-summary(fit)
+shapiro.test(npk$yield)
+
+model <- aov(yield ~ block + N, data = npk)
+summary(model)
 
 # The output of the ANOVA analysis indicates that both factors (block and N) have
 # a significant effect on the yield.
@@ -64,4 +69,9 @@ summary(fit)
 # In conclusion, it was sensible to include factor block in the model as it has 
 # a significant effect on yield. The Friedman test cannot be applied in this case 
 # since there is only one observation per combination of block and N.
+
+
+
+
+
 
