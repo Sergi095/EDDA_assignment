@@ -95,14 +95,14 @@ Since the sample is assumed to follow a normal distribution, the bootstrapped co
 t.test(data, mu = 2800, alternative = "greater")
 ```
 
-performed a one-sample t-test with the null hypothesis(H0) that the mean birthweight is equal to 2800 grams (mu = 2800) and the alternative hypothesis(H1) that the mean birthweight is bigger than 2800 grams.The p-value is leaa than the confidence level of 0.05, which does give evidence against the null hypothesis. Therefore, we reject the null hypothesis and conclude that the mean birthweight is greater than 2800 grams. The confidence interval (CI) in the R-output for this test represents a range of values within which the true population mean birthweight is likely to fall with a certain degree of confidence. For a one-tailed test, we only obtain either a lower bound or upper bound, which we call a one-sided confidence interval. In our case, we only obtained a lower bound CI [2829.202  Inf].
+performed a one-sample t-test with the null hypothesis(H0) that the mean birthweight is equal to 2800 grams (mu = 2800) and the alternative hypothesis(H1) that the mean birthweight is bigger than 2800 grams.The p-value is less than the confidence level of 0.05, which does give evidence against the null hypothesis. Therefore, we reject the null hypothesis and conclude that the mean birthweight is greater than 2800 grams. The confidence interval (CI) in the R-output for this test represents a range of values within which the true population mean birthweight is likely to fall with a certain degree of confidence. For a one-tailed test, we only obtain either a lower bound or upper bound, which we call a one-sided confidence interval. In our case, we only obtained a lower bound CI [2829.202 Inf].
 
 ```{r}
 # sign test
 binom.test(sum(data > 2800), n=length(data), p = 0.5, alternative = "greater")
 ```
 
-The p-value is less than the confidence level of 0.05, which does give evidence against the null hypothesis. Therefore, we reject the null hypothesis and conclude that the mean birthweight is bigger than 2800 grams.
+The sign test p-value is less than the confidence level of 0.05, which gives enough evidence against the null hypothesis. Therefore, we reject the null hypothesis and conclude that the mean birthweight is bigger than 2800 grams.
 
 **C)**
 
@@ -123,7 +123,7 @@ power_sign = sum(psign<0.05)/B
 cat("the powers of the t-test: ", power_ttest, ",  the powers of the sing test: ", power_sign, sep = "")
 ```
 
-One way to compute the power of the tests is through simulation.The estimated power of the one-sided t-test is 0.301, meaning that if the true population mean is actually 2913.293 (as estimated from the data), there is a 30% chance that the t-test will correctly reject the null hypothesis of a mean of 2800. The estimated power of the sign test is 0.175, meaning that there is a 17.5% chance that the sign test will correctly reject the null hypothesis of a median of 2800. These power estimates suggest that the t-test may be more powerful than the sign test for detecting a difference in the mean above 2800.
+One way to compute the power of the tests is through simulation. The estimated power of the one-sided t-test is 0.27, meaning that if the true population mean is actually 2913.293 (as estimated from the data), there is a 27% chance that the t-test will correctly reject the null hypothesis of a mean of 2800. The estimated power of the sign test is 0.16, meaning that there is a 16% chance that the sign test will correctly reject the null hypothesis of a median of 2800. These power estimates suggest that the t-test may be more powerful than the sign test for detecting a difference in the mean above 2800.
 
 **D)** Recover the whole confidence interval and its confidence level.
 
