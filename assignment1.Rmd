@@ -331,7 +331,7 @@ qqnorm(after)
 hist(after) 
 qqnorm(after-before)
 hist(after-before) 
-t.test(before,after,paired=T) 
+t.test(before,after,paired=TRUE) 
 ```
 
 **b)**
@@ -384,6 +384,7 @@ predict(dataaov,preddata)
 Load the MASS package and view the npk dataset
 
 ```{r echo=FALSE}
+#install.packages('MASS')
 library(MASS)
 data(npk)
 ```
@@ -478,3 +479,26 @@ The F-value for block is 3.395, which is relatively small compared to the F-valu
 The residual sum of squares is 343.8, indicating the variability of the data points around the fitted model.
 
 In conclusion, it was sensible to include factor block in the model as it has a significant effect on yield. The Friedman test cannot be applied in this case since there is only one observation per combination of block and N.
+
+**D)**
+
+```{r}
+model1 = lm(yield ~ N:block + P + K,data=npk)
+model2 = lm(yield ~ P:block + N + K,data=npk)
+model3 = lm(yield ~ K:block + P + N,data=npk)
+
+print('model 1: ')
+anova(pairwise_N)
+print('model 2: ')
+anova(pairwise_P)
+print('model 3: ')
+anova(pairwise_K)
+
+
+model_add = lm(yield ~ N+P+K+block, data=npk)
+print('model all sum: ')
+anova(model_add)
+
+
+```
+model with all factors summed is prefered.
