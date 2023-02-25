@@ -35,6 +35,8 @@ boxplot (data , main =" Boxplot of Birthweight ",
 
 ```
 
+
+
 calculate Shapiro-Wilk normality test
 
 ```{r}
@@ -451,34 +453,29 @@ qqnorm(npk$yield)
 qqline(npk$yield)
 
 # Check for normality with boxplot
-boxplot (npk$yield , main =" Boxplot of yield ",
-         xlab =" yield ",horizontal = TRUE)
-
-```
-
-the density displays a bell-shaped curve that resembles a normal distribution. The QQ-plot also appears to follow a straight line, indicating normality of the data. The boxplot exhibits some asymmetry so the data is normally distributed.
-
-```{r}
+plot(yield ~ block + factor(N), data = npk) 
+# Shapiro-Wilk test
 shapiro.test(npk$yield)
 
 ```
 
-the p-value of the test is greater than 0.05, we can assume that the data is normally distributed. In this case, the p-value is 0.8735, which suggests that the data is normally distributed.
+the density displays a bell-shaped curve that resembles a normal distribution. The QQ-plot also appears to follow a straight line, indicating normality of the data.the Shapiro-Wilk test p-value of the test is greater than 0.05, we can assume that the data is normally distributed. In this case, the p-value is 0.87, which suggests that the data is normally distributed. The boxplot exhibits differences in the mean per block.
+
 
 Given that the data appears to be normally distributed, we can proceed with conducting a two-way ANOVA with the response variable yield and the two factors block and N:
 
 ```{r}
-fit <- aov(yield ~ block + N, data = npk)
-summary(fit)
+twoANOVA <- aov(yield ~ block * factor(N), data = npk)
+summary(twoANOVA)
 ```
 
-The output of the ANOVA analysis indicates that both factors (block and N) have a significant effect on the yield.The p-value for block is 0.0262, which is less than 0.05, indicating a significant effect of block on yield. The p-value for N is 0.0071, which is also less than 0.05, indicating a significant effect of N on yield.
+Based on the ANOVA table, it was sensible to include factor block into this model as it has a significant effect on yield with a p-value of 0.0397. The factor N also appears to have a significant effect on yield with a p-value of 0.0102.
 
-The F-value for block is 3.395, which is relatively small compared to the F-value for N (9.360), suggesting that the effect of block on yield is smaller than the effect of N.
+The interaction term between block and N is not statistically significant, as its p-value is 0.4769. This suggests that the effect of block on yield does not depend on the level of N, and vice versa.
 
-The residual sum of squares is 343.8, indicating the variability of the data points around the fitted model.
+In conclusion, the ANOVA suggests that both block and N have significant effects on yield, and that it was sensible to include both factors in the model.
 
-In conclusion, it was sensible to include factor block in the model as it has a significant effect on yield. The Friedman test cannot be applied in this case since there is only one observation per combination of block and N.
+The Friedman test cannot be applied in this situation since the Friedman test requires more than one observation per combination of the factors. In this case, there is only one observation per combination of block and N, so the Friedman test cannot be used.
 
 **D)**
 
@@ -501,4 +498,5 @@ anova(model_add)
 
 
 ```
+
 model with all factors summed is prefered.
