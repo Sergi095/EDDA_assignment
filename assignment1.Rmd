@@ -183,7 +183,7 @@ mean(female_means)
 t.test(male_means, female_means)
 ```
 
-A Two-sample t-test was conducted to examine whether the mean weight differs for male and female babies. The null hypothesis (H0) assumed that the mean weight is different, while the alternative hypothesis (H1) assumed there is no different of the weight for male and female babies. The obtained p-value was lower than the conventional significance level of 0.05, indicating strong evidence against the null hypothesis. As a result, the null hypothesis was rejected, and it was concluded that the mean weight is not different for male and female babies.
+A Two-sample t-test was conducted to examine whether the mean weight differs for male and female babies. The null hypothesis (H0) assumed there is no different, while the alternative hypothesis (H1) assumed that the mean weight is different of the weight for male and female babies. The obtained p-value was lower than the conventional significance level of 0.05, indicating strong evidence against the null hypothesis. As a result, the null hypothesis was rejected, and it was concluded that the mean weight is not different for male and female babies.
 
 ## Exercise 2
 
