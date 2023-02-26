@@ -35,8 +35,6 @@ boxplot (data , main =" Boxplot of Birthweight ",
 
 ```
 
-
-
 calculate Shapiro-Wilk normality test
 
 ```{r}
@@ -131,7 +129,7 @@ One way to compute the power of the tests is through simulation. The estimated p
 
 ```{r}
 # Set the number of samples to take and the lower probability
-n_samples = 100
+n_samples = 1000
 p_left = 0.25
 # Create an empty vector to store the sample probabilities
 sample_probabilities = numeric(n_samples)
@@ -148,13 +146,19 @@ sample_sd = sd(sample_probabilities)
 p_hat = mean(sample_probabilities)
 # margin of error 
 me = p_hat - p_left
-# Calculate the upper confidence interval for p
+# Calculate the upper confidence interval
 p_right = p_hat + me
-confidence_level = ((me/1.96)*2)-1
+# Calculate the z-score
+z = me / sqrt((p_hat*(1-p_hat))/length(data))
+# Calculate the level of significance
+alpha = (1 - pnorm(z))*2
+# Calculate the confidence level
+confidence_level = 1 - alpha
+
 cat("Confidence Interval: [", p_left, ", ", p_right, "]","confidence_level: ",confidence_level , sep = "")
 ```
 
-sample proportion denoted as pˆ, we can calculate the right side of the confidence interval using the margin of error. As a result, we obtain the confidence interval [0.25, 0.4] with a confidence level of around 92%.
+sample proportion denoted as pˆ, we can calculate the right side of the confidence interval using the margin of error. As a result, we obtain the confidence interval [0.25, 0.4] with a confidence level of around 98%.
 
 **E)**
 
@@ -460,7 +464,6 @@ shapiro.test(npk$yield)
 ```
 
 the density displays a bell-shaped curve that resembles a normal distribution. The QQ-plot also appears to follow a straight line, indicating normality of the data.the Shapiro-Wilk test p-value of the test is greater than 0.05, we can assume that the data is normally distributed. In this case, the p-value is 0.87, which suggests that the data is normally distributed. The boxplot exhibits differences in the mean per block.
-
 
 Given that the data appears to be normally distributed, we can proceed with conducting a two-way ANOVA with the response variable yield and the two factors block and N:
 
