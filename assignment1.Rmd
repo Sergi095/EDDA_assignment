@@ -221,7 +221,7 @@ shapiro.test(cholesterol$Before) # accept null, data is normal
 ggplot(cholesterol, aes(x = After8weeks)) +
   geom_histogram(binwidth = 0.8) +
   labs(x = "After 8 weeks", y = "Count", title = "Histogram of cholesterol levels after 8 weeks on diet")
-shapiro.test(after) # accept null, data is normal
+shapiro.test(cholesterol$After8weeks) # accept null, data is normal
 # checking difference
 diff <- cholesterol$Before - cholesterol$After8weeks
 
@@ -488,11 +488,11 @@ model2 = lm(yield ~ P:block + N + K,data=npk)
 model3 = lm(yield ~ K:block + P + N,data=npk)
 
 print('model 1: ')
-anova(pairwise_N)
+anova(model1)
 print('model 2: ')
-anova(pairwise_P)
+anova(model2)
 print('model 3: ')
-anova(pairwise_K)
+anova(model3)
 
 
 model_add = lm(yield ~ N+P+K+block, data=npk)
