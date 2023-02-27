@@ -1,14 +1,12 @@
 ---
 title: "Assignment 1"
-author: "Group 61, Ikrame Zirar, Mohammed Majeed,<name>"
+author: "Group 61, Ikrame Zirar, Mohammed Majeed,Sergio Alejandro Gutierrez Maury"
 date: "23 February 2023"
 output: pdf_document
 highlight: tango
 ---
 
-
 ## Exercise 1
-
 
 ```{r echo=FALSE}
 birthweight = read.table(file = "birthweight.txt", header = TRUE)
@@ -500,11 +498,10 @@ anova(model_add)
 
 ```
 
-model with all factors summed is prefered.
+model with all factors summed is prefered, given that it is the model with most significant factors.
 
+**e)** According to the p-value, nitrogen has a significant effect on the yield. The fixed effects model in C shows similar results, where nitrogen also has a significant effect on the yield.
 
-**e)**
-According to the p-value, nitrogen has a significant effect on the yield. The fixed effects model in C shows similar results, where nitrogen also has a significant effect on the yield.
 ```{r}
 npklmer= lmer(yield~N+(1|block), REML=FALSE, data=npk)
 npklmer2=lmer(yield~(1|block), REML=FALSE, data=npk)
