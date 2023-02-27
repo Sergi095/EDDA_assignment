@@ -14,7 +14,7 @@ data= birthweight$birthweight
 
 ```
 
-**a)** Check for normality with QQ plot,histogram, and boxplot
+**A)** Check for normality with QQ plot,histogram, and boxplot
 
 ```{r}
 qqnorm(data, main = "Normal Q-Q Plot of Birthweight")
@@ -79,10 +79,12 @@ boot_data <- boot(data, statistic = function(data, i) mean(data[i]), R = B)
 boot_ci <- boot.ci(boot_data, type = "perc", conf = 0.96)
 lower_bound_boot_ci <- boot_ci$percent[[4]]
 upper_bound_boot_ci <- boot_ci$percent[[5]]
-cat("boot_CI Confidence Interval: [", lower_bound_boot_ci, ", ", upper_bound_boot_ci, "]", sep = "")
+cat("boot_CI Confidence Interval: [",
+    lower_bound_boot_ci, ", ",
+    upper_bound_boot_ci, "]", sep = "")
 ```
 
-Since the sample is assumed to follow a normal distribution, the bootstrapped confidence interval is expected to be similar to the confidence interval calculated prior. This is because the sample mean is a consistent estimator of the population mean, and the bootstrapping method is based on resampling the data with replacement from the original sample.
+Since the sample is assumed to follow a normal distribution, the bootstrapped confidence interval is expected to be similar to the confidence interval calculated prior. This is because the sample mean is a consistent estimator of the population mean, and the bootstrapping method is based on re-sampling the data with replacement from the original sample.
 
 **B)**
 
@@ -91,7 +93,7 @@ Since the sample is assumed to follow a normal distribution, the bootstrapped co
 t.test(data, mu = 2800, alternative = "greater")
 ```
 
-performed a one-sample t-test with the null hypothesis(H0) that the mean birthweight is equal to 2800 grams (mu = 2800) and the alternative hypothesis(H1) that the mean birthweight is bigger than 2800 grams.The p-value is less than the confidence level of 0.05, which does give evidence against the null hypothesis. Therefore, we reject the null hypothesis and conclude that the mean birthweight is greater than 2800 grams. The confidence interval (CI) in the R-output for this test represents a range of values within which the true population mean birthweight is likely to fall with a certain degree of confidence. For a one-tailed test, we only obtain either a lower bound or upper bound, which we call a one-sided confidence interval. In our case, we only obtained a lower bound CI [2829.202 Inf].
+performed a one-sample t-test with the null hypothesis$(H_{0})$ that the mean birthweight is equal to 2800 grams $(\mu = 2800)$ and the alternative hypothesis$(H_{1})$ that the mean birthweight is bigger than 2800 grams.The p-value is less than the confidence level of 0.05, which does give evidence against the null hypothesis. Therefore, we reject the null hypothesis and conclude that the mean birthweight is greater than 2800 grams. The confidence interval (CI) in the R-output for this test represents a range of values within which the true population mean birthweight is likely to fall with a certain degree of confidence. For a one-tailed test, we only obtain either a lower bound or upper bound, which we call a one-sided confidence interval. In our case, we only obtained a lower bound CI [2829.202 Inf].
 
 ```{r}
 # sign test
@@ -116,7 +118,9 @@ for(i in 1:B) {
 }
 power_ttest = sum(pttest<0.05)/B
 power_sign = sum(psign<0.05)/B
-cat("the powers of the t-test: ", power_ttest, ",  the powers of the sing test: ", power_sign, sep = "")
+cat("the powers of the t-test: ", power_ttest, ",
+    the powers of the sing test: ",
+    power_sign, sep = "")
 ```
 
 One way to compute the power of the tests is through simulation. The estimated power of the one-sided t-test is 0.27, meaning that if the true population mean is actually 2913.293 (as estimated from the data), there is a 27% chance that the t-test will correctly reject the null hypothesis of a mean of 2800. The estimated power of the sign test is 0.16, meaning that there is a 16% chance that the sign test will correctly reject the null hypothesis of a median of 2800. These power estimates suggest that the t-test may be more powerful than the sign test for detecting a difference in the mean above 2800.
@@ -151,10 +155,14 @@ alpha = (1 - pnorm(z))*2
 # Calculate the confidence level
 confidence_level = 1 - alpha
 
-cat("Confidence Interval: [", p_left, ", ", p_right, "]","confidence_level: ",confidence_level , sep = "")
+cat("Confidence Interval: [", p_left,
+    ", ", p_right, "]",
+    "confidence_level: ",
+    confidence_level,
+    sep = "")
 ```
 
-sample proportion denoted as pˆ, we can calculate the right side of the confidence interval using the margin of error. As a result, we obtain the confidence interval [0.25, 0.4] with a confidence level of around 98%.
+sample proportion denoted as $\hat{p}$, we can calculate the right side of the confidence interval using the margin of error. As a result, we obtain the confidence interval [0.25, 0.4] with a confidence level of around 98%.
 
 **E)**
 
@@ -183,7 +191,7 @@ mean(female_means)
 t.test(male_means, female_means)
 ```
 
-A Two-sample t-test was conducted to examine whether the mean weight differs for male and female babies. The null hypothesis (H0) assumed there is no different, while the alternative hypothesis (H1) assumed that the mean weight is different of the weight for male and female babies. The obtained p-value was lower than the conventional significance level of 0.05, indicating strong evidence against the null hypothesis. As a result, the null hypothesis was rejected, and it was concluded that the mean weight is not different for male and female babies.
+A Two-sample t-test was conducted to examine whether the mean weight differs for male and female babies. The null hypothesis $(H_{0})$ assumed there is no different, while the alternative hypothesis $(H_{1})$ assumed that the mean weight is different of the weight for male and female babies. The obtained p-value was lower than the conventional significance level of 0.05, indicating strong evidence against the null hypothesis. As a result, the null hypothesis was rejected, and it was concluded that the mean weight is not different for male and female babies.
 
 ## Exercise 2
 
@@ -210,20 +218,27 @@ cor(cholesterol$Before, cholesterol$After8weeks)
 # creating histograms
 ggplot(cholesterol, aes(x = Before)) +
   geom_histogram(binwidth = 0.8) +
-  labs(x = "Before", y = "Count", title = "Histogram of cholesterol levels before diet")
+  labs(x = "Before",
+       y = "Count",
+       title = "Histogram of cholesterol levels before diet")
 
 shapiro.test(cholesterol$Before) # accept null, data is normal
 
 ggplot(cholesterol, aes(x = After8weeks)) +
   geom_histogram(binwidth = 0.8) +
-  labs(x = "After 8 weeks", y = "Count", title = "Histogram of cholesterol levels after 8 weeks on diet")
+  labs(x = "After 8 weeks",
+       y = "Count",
+       title = "Histogram of cholesterol levels after 8 weeks on diet")
 shapiro.test(cholesterol$After8weeks) # accept null, data is normal
 # checking difference
 diff <- cholesterol$Before - cholesterol$After8weeks
 
 ggplot(cholesterol, aes(x = Before - After8weeks)) +
   geom_histogram(binwidth = 0.2) +
-  labs(x = "Difference in cholesterol levels", y = "Count", title = "Histogram of differences before and after diet")
+  labs(
+    x = "Difference in cholesterol levels",
+       y = "Count",
+       title = "Histogram of differences before and after diet")
 
 shapiro.test(diff) # accept null, data is normal
 ```
@@ -255,9 +270,9 @@ c(lower, upper)
 
 **D)**
 
-H0: X1, ..., X18 \~ Unif[3, 12]
+$H_{0}: X_{1}, \cdots, X_{18} \sim Unif[3, 12]$
 
-T = max(X1, ..., X18)
+$T = \max(X_{1},\cdots, X_{18})$
 
 ```{r}
 after = cholesterol$After8weeks
@@ -289,7 +304,7 @@ abline(h = 0.1, col = "blue", lty = 2)
 
 ```
 
-We can see that H_0 is not rejected, at alpha = 5%, for values of theta between approximately 3 and 7.5, but is rejected for larger values of theta. Therefore, we can conclude that the data is consistent with a uniform distribution on [3, 7.5].
+We can see that $H_{0}$ is not rejected, at $\alpha = 5\%$, for values of theta between approximately 3 and 7.5, but is rejected for larger values of theta. Therefore, we can conclude that the data is consistent with a uniform distribution on [3, 7.5].
 
 Can the Kolmogorov-Smirnov test be also applied for this situation? No, the Kolmogorov-Smirnov test is not applicable in this case since the null hypothesis is not a continuous distribution.
 
@@ -308,6 +323,7 @@ binom.test(sum(cholesterol$After8weeks < 4.5), length(cholesterol$After8weeks), 
 ## Exercise 3
 
 First, we add the response variable weight.lost.
+
 ```{r echo=FALSE}
 data = read.table(file = "diet.txt", header = TRUE)
 data$weight.lost=data$preweight-data$weight6weeks
@@ -412,15 +428,19 @@ npk_nitrogen  <- npk[npk$N == 1,]
 nitrogen_avg_yield  <- aggregate(yield ~ block, data = npk_nitrogen, FUN = mean)
 # Subset the data to only include plots without nitrogen treatment
 npk_no_nitrogen  <- npk[npk$N == 0,]
-# Calculate the average yield per block for plots without nitrogen treatment
+# Calculate the average yield per block for plots without nitrogen 
+#treatment
 no_nitrogen_avg_yield  <- aggregate(yield ~ block, data = npk_no_nitrogen, FUN = mean)
-# Make a boxplot comparing the average yield per block for nitrogen and no nitrogen treatments
+# Make a boxplot comparing the average yield per block for nitrogen and no nitrogen 
+#treatments
 boxplot(no_nitrogen_avg_yield$yield, nitrogen_avg_yield$yield,
         names = c("No Nitrogen Treatment", "Nitrogen Treatment"), ylab = "yield")
 #legend("topleft", legend = c("Nitrogen Treatment", "No Nitrogen Treatment"))
 
 
-avg_yield <- apply(cbind(nitrogen_avg_yield[[2]], no_nitrogen_avg_yield[[2]]),1,function(x) unname(unlist(x)))
+avg_yield <- apply(cbind(nitrogen_avg_yield[[2]], no_nitrogen_avg_yield[[2]]),
+                   1,
+                   function(x) unname(unlist(x)))
 rownames(avg_yield)<- c("nitrogen_avg_yield","no_nitrogen_avg_yield")
 
 barplot(avg_yield, col = c("#1b98e0", "#353436"),beside = TRUE,
