@@ -1,16 +1,14 @@
 ---
 title: "Assignment 1"
-author: "Group 61"
+author: "Group 61, Ikrame Zirar, <name>,<name>"
 date: "23 February 2023"
 output: pdf_document
 highlight: tango
 ---
 
-*In order not to be bothered with rounding the numbers, set `options(digits=3)r options(digits=3)`.*
 
 ## Exercise 1
 
-Read the data
 
 ```{r echo=FALSE}
 birthweight = read.table(file = "birthweight.txt", header = TRUE)
@@ -61,7 +59,7 @@ cat("Confidence Interval: [", lower_ci, ", ", upper_ci, "]", sep = "")
 ```
 
 ```{r}
-# construct a bounded 96%-CI for mu(mean) 
+# construct a bounded 96%-CI for mu(mean)
 for (sample_size in 1:1000) {
   lower_bound = mu - z*stnd/sqrt(sample_size)
   upper_bound = mu + z*stnd/sqrt(sample_size)
@@ -144,7 +142,7 @@ for(i in 1:n_samples){
 sample_sd = sd(sample_probabilities)
 # Calculate the mean of the sample proportions
 p_hat = mean(sample_probabilities)
-# margin of error 
+# margin of error
 me = p_hat - p_left
 # Calculate the upper confidence interval
 p_right = p_hat + me
@@ -302,7 +300,7 @@ Can the Kolmogorov-Smirnov test be also applied for this situation? No, the Kolm
 ```{r}
 
 # Median test
-binom.test(sum(cholesterol$After8weeks<6),length(cholesterol$After8weeks),p=0.5,alt="less") 
+binom.test(sum(cholesterol$After8weeks<6),length(cholesterol$After8weeks),p=0.5,alt="less")
 
 binom.test(sum(cholesterol$After8weeks < 4.5), length(cholesterol$After8weeks), p = 0.25, alternative = "less", conf.level = 0.95)
 
@@ -332,12 +330,12 @@ par(mfrow=c(1,2))
 
 
 qqnorm(before)
-hist(before) 
+hist(before)
 qqnorm(after)
-hist(after) 
+hist(after)
 qqnorm(after-before)
-hist(after-before) 
-t.test(before,after,paired=TRUE) 
+hist(after-before)
+t.test(before,after,paired=TRUE)
 ```
 
 **b)**
@@ -345,7 +343,7 @@ t.test(before,after,paired=TRUE)
 We perform one-way ANOVA and it gives a p-value of 0.003. This means that diet has an effect on weight loss.
 
 ```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
-data$diet=factor(data$diet) 
+data$diet=factor(data$diet)
 dataaov=lm(weight.lost~diet,data=data)
 anova(dataaov)
 ```
@@ -353,8 +351,8 @@ anova(dataaov)
 We will check the assumptions. We perform a QQ-plot with the residuals for normality. The QQ-plot looks normal. The fitted values plot also does not really show a pattern.
 
 ```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
-par(mfrow=c(1,2)); qqnorm(residuals(dataaov)) 
-plot(fitted(dataaov),residuals(dataaov)) 
+par(mfrow=c(1,2)); qqnorm(residuals(dataaov))
+plot(fitted(dataaov),residuals(dataaov))
 ```
 
 We use the summary to be able to check the estimates. The group means are all \>0, which means that the diets lead to weight loss and diet 3 is the best for losing weight.
@@ -369,7 +367,7 @@ summary(dataaov) #can we use fitted(dataaov here as well? )
 
 ```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
 genderaov=lm(weight.lost~gender*diet,data=data)  
-anova(genderaov) 
+anova(genderaov)
 ```
 
 **e)**
@@ -380,8 +378,8 @@ The predicted weight loss for all diets: 3.300kg, 3.026kg and 5.148kg
 
 ```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
 preddata=data.frame(diet=c("1","2","3"))
-predict(dataaov,preddata) 
- 
+predict(dataaov,preddata)
+
 
 ```
 
@@ -422,7 +420,7 @@ npk_no_nitrogen  <- npk[npk$N == 0,]
 # Calculate the average yield per block for plots without nitrogen treatment
 no_nitrogen_avg_yield  <- aggregate(yield ~ block, data = npk_no_nitrogen, FUN = mean)
 # Make a boxplot comparing the average yield per block for nitrogen and no nitrogen treatments
-boxplot(no_nitrogen_avg_yield$yield, nitrogen_avg_yield$yield, 
+boxplot(no_nitrogen_avg_yield$yield, nitrogen_avg_yield$yield,
         names = c("No Nitrogen Treatment", "Nitrogen Treatment"), ylab = "yield")
 #legend("topleft", legend = c("Nitrogen Treatment", "No Nitrogen Treatment"))
 
@@ -434,7 +432,7 @@ barplot(avg_yield, col = c("#1b98e0", "#353436"),beside = TRUE,
         xlab="blocks",ylab = "yield", ylim=c(0,90),
         names.arg=c("1", "2", "3", "4", "5", "6"))
 
-legend("topleft", legend = c("Nitrogen Treatment", "No Nitrogen Treatment"), 
+legend("topleft", legend = c("Nitrogen Treatment", "No Nitrogen Treatment"),
        fill =c("#1b98e0", "#353436"))
 
 ```
@@ -457,7 +455,7 @@ qqnorm(npk$yield)
 qqline(npk$yield)
 
 # Check for normality with boxplot
-plot(yield ~ block + factor(N), data = npk) 
+plot(yield ~ block + factor(N), data = npk)
 # Shapiro-Wilk test
 shapiro.test(npk$yield)
 
@@ -503,3 +501,13 @@ anova(model_add)
 ```
 
 model with all factors summed is prefered.
+
+
+**e)**
+According to the p-value, nitrogen has a significant effect on the yield. The fixed effects model in C shows similar results, where nitrogen also has a significant effect on the yield.
+```{r}
+npklmer= lmer(yield~N+(1|block), REML=FALSE, data=npk)
+npklmer2=lmer(yield~(1|block), REML=FALSE, data=npk)
+npkmaov=anova(npklmer2, npklmer)
+npkmaov
+```
