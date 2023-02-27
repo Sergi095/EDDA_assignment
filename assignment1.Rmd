@@ -307,15 +307,10 @@ binom.test(sum(cholesterol$After8weeks < 4.5), length(cholesterol$After8weeks), 
 
 ## Exercise 3
 
+First, we add the response variable weight.lost.
 ```{r echo=FALSE}
 data = read.table(file = "diet.txt", header = TRUE)
-```
-
-First, we add the response variable weight.lost.
-
-```{r}
 data$weight.lost=data$preweight-data$weight6weeks
-
 ```
 
 **a)**
@@ -361,7 +356,9 @@ summary(dataaov) #can we use fitted(dataaov here as well? )
 
 ```
 
-**c)** The two-way ANOVA test shows that diet and gender have an effect on the lost weight. The p-value of 0.049, shows that there is not a significant interaction between diet and gender.
+**c)**
+
+The two-way ANOVA test shows that diet and gender have an effect on the lost weight. The p-value of 0.049, shows that there is not a significant interaction between diet and gender.
 
 ```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
 genderaov=lm(weight.lost~gender*diet,data=data)  
