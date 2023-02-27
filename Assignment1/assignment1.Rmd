@@ -83,7 +83,6 @@ cat("boot_CI Confidence Interval: [",
     upper_bound_boot_ci, "]", sep = "")
 ```
 
-
 **B)**
 
 We performed a one-sample t-test with the null hypothesis$(H_{0})$ that the mean birthweight is equal to 2800 grams $(\mu = 2800)$ and the alternative hypothesis$(H_{1})$ that the mean birthweight is bigger than 2800 grams.The p-value is less than the confidence level of 0.05, which does give evidence against the null hypothesis. Therefore, we reject the null hypothesis and conclude that the mean birthweight is greater than 2800 grams. The confidence interval (CI) in the R-output for this test represents a range of values within which the true population mean birthweight is likely to fall with a certain degree of confidence. For a one-tailed test, we only obtain either a lower bound or upper bound, which we call a one-sided confidence interval. In our case, we only obtained a lower bound CI [2829.202 Inf].
@@ -92,16 +91,18 @@ We performed a one-sample t-test with the null hypothesis$(H_{0})$ that the mean
 # Verify this claim by using a one side t-test
 t.test(data, mu = 2800, alternative = "greater")
 ```
+
 The sign test p-value is less than the confidence level of 0.05, which gives enough evidence against the null hypothesis. Therefore, we reject the null hypothesis and conclude that the mean birthweight is bigger than 2800 grams.
+
 ```{r}
 # sign test
 binom.test(sum(data > 2800), n=length(data), p = 0.5, alternative = "greater")
 ```
 
-
 **C)**
 
 One way to compute the power of the tests is through simulation. The estimated power of the one-sided t-test is 0.27, meaning that if the true population mean is actually 2913.293 (as estimated from the data), there is a 27% chance that the t-test will correctly reject the null hypothesis of a mean of 2800. The estimated power of the sign test is 0.16, meaning that there is a 16% chance that the sign test will correctly reject the null hypothesis of a median of 2800. These power estimates suggest that the t-test may be more powerful than the sign test for detecting a difference in the mean above 2800.
+
 ```{r}
 B = 1000; n = 50
 psign = numeric(B) # will contain P-values of sign test
@@ -118,7 +119,6 @@ cat("the powers of the t-test: ", power_ttest, ",
     the powers of the sing test: ",
     power_sign, sep = "")
 ```
-
 
 **D)**
 
@@ -161,10 +161,10 @@ cat("Confidence Interval: [", p_left,
     sep = "")
 ```
 
-
 **E)**
 
 A Two-sample t-test was conducted to examine whether the mean weight differs for male and female babies. The null hypothesis $(H_{0})$ assumed there is no different, while the alternative hypothesis $(H_{1})$ assumed that the mean weight is different of the weight for male and female babies. The obtained p-value was lower than the conventional significance level of 0.05, indicating strong evidence against the null hypothesis. As a result, the null hypothesis was rejected, and it was concluded that the mean weight is not different for male and female babies.
+
 ```{r}
 male_means = c()
 female_means = c()
@@ -184,7 +184,6 @@ mean(male_means); mean(female_means)
 # Perform a two-sample t-test assuming unequal variances
 t.test(male_means, female_means)
 ```
-
 
 ## Exercise 2
 
@@ -248,7 +247,6 @@ require(gridExtra)
 grid.arrange(regplot, hist1, hist2, hist3, ncol=2)
 ```
 
-
 **B)**
 
 Given that the data set contains measurements of cholesterol levels before and after a low fat low cholesterol diet with the same individuals, the data are paired. Therefore, we can use paired tests to analyze the data.
@@ -262,8 +260,11 @@ in this case, a permutation test is not applicable since we only have one group 
 
 **C)**
 
+$\hat{\theta} = 8.55$, and the confidence interval (CI) is: $(7.81, 9.29)$. We can increase the CI by increasing the sample size or by using bootstrapping.
+
 ```{r}
 theta_hat <- 2*mean(cholesterol$After8weeks) - 3 # Calculate estimate for theta
+theta_hat
 sigma <- sqrt((theta_hat-3)^2/12)
 
 n <- length(cholesterol$After8weeks)
@@ -399,7 +400,6 @@ predict(dataaov,preddata)
 
 ## Exercise 4
 
-
 ```{r echo=FALSE}
 #install.packages('MASS')
 library(MASS)
@@ -459,7 +459,6 @@ legend("topleft", legend = c("Nitrogen Treatment", "No Nitrogen Treatment"),
 
 ```
 
-
 **C)**
 
 Check for normality with QQ plot,histogram, and boxplot. The density displays a bell-shaped curve that resembles a normal distribution. The QQ-plot also appears to follow a straight line, indicating normality of the data.the Shapiro-Wilk test p-value of the test is greater than 0.05, we can assume that the data is normally distributed. In this case, the p-value is 0.87, which suggests that the data is normally distributed. The boxplot exhibits differences in the mean per block.
@@ -481,7 +480,6 @@ shapiro.test(npk$yield)
 
 ```
 
-
 Given that the data appears to be normally distributed, we can proceed with conducting a two-way ANOVA with the response variable yield and the two factors block and N.
 
 Based on the ANOVA table, it was sensible to include factor block into this model as it has a significant effect on yield with a p-value of 0.0397. The factor N also appears to have a significant effect on yield with a p-value of 0.0102.
@@ -496,7 +494,6 @@ The Friedman test cannot be applied in this situation since the Friedman test re
 twoANOVA <- aov(yield ~ block * factor(N), data = npk)
 summary(twoANOVA)
 ```
-
 
 **D)**
 
@@ -521,7 +518,6 @@ anova(model_add)
 
 
 ```
-
 
 **e)**
 
