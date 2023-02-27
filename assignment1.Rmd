@@ -270,7 +270,7 @@ c(lower, upper)
 
 **D)**
 
-$H_{0}: X_{1}, \cdots, X_{18} \sim Unif[3, 12]$
+$H_{0}: X_{1}, \cdots, X_{18} \sim Unif[3, \theta]$
 
 $T = \max(X_{1},\cdots, X_{18})$
 
