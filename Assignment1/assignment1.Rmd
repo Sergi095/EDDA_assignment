@@ -260,7 +260,7 @@ in this case, a permutation test is not applicable since we only have one group 
 
 **C)**
 
-$\hat{\theta} = 8.55$, and the confidence interval (CI) is: $(7.81, 9.29)$. We can increase the CI by increasing the sample size or by using bootstrapping.
+$\hat{\theta} = 8.55$, and the confidence interval (CI) is: $(7.81, 9.29)$. We can increase the CI by increasing the sample size, the bigger the sample size the lower CI will be, as there is more information available.
 
 ```{r}
 theta_hat <- 2*mean(cholesterol$After8weeks) - 3 # Calculate estimate for theta
