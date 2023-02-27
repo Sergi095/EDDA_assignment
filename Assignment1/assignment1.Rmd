@@ -17,6 +17,7 @@ data= birthweight$birthweight
 **A)** Check for normality with QQ plot,histogram, and boxplot
 
 ```{r}
+par(mfrow=c(1,3))
 qqnorm(data, main = "Normal Q-Q Plot of Birthweight")
 qqline(data,col=" red ")
 
@@ -206,7 +207,7 @@ cholesterol <- read.table("cholesterol.txt", header = TRUE)
 library(ggplot2)
 
 summary(cholesterol)
-
+par(mfrow=c(1,3))
 # Regression the 2 variables are highly correlated
 ggplot(cholesterol, aes(x = Before, y = After8weeks)) +
   geom_point() +
@@ -333,10 +334,9 @@ data$weight.lost=data$preweight-data$weight6weeks
 
 Both histograms do not look normal, but the difference of after-before from the Shapiro test does mostly look normal. So we can use the paired t-test. According to the t-test, the diet does affect the weight loss because of a p-value \< 2.2e-16.
 
-```{r echo=FALSE}
+```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
 before=data$preweight;after=data$weight6weeks
 par(mfrow=c(1,2))
-
 
 qqnorm(before)
 hist(before)
@@ -368,7 +368,7 @@ We use the summary to be able to check the estimates. The group means are all \>
 
 ```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
 
-summary(dataaov) #can we use fitted(dataaov here as well? )
+summary(dataaov) 
 
 ```
 
@@ -421,7 +421,8 @@ head(data_frame)
 
 **B)**
 
-```{r}
+```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
+par(mfrow=c(1,2))
 # Subset the data to only include nitrogen treatment
 npk_nitrogen  <- npk[npk$N == 1,]
 # Calculate the average yield per block for nitrogen treatment
@@ -460,7 +461,8 @@ It is important to take the factor block into account because it helps to contro
 
 Check for normality with QQ plot,histogram, and boxplot
 
-```{r}
+```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
+par(mfrow=c(1,2))
 # Check for normality with histogram
 hist(x = npk$yield , breaks=7 ,main = "Histogram of yield",
      xlab = " yield ",freq = FALSE)
