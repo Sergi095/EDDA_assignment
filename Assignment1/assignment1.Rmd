@@ -16,7 +16,7 @@ data= birthweight$birthweight
 
 **A)** Check for normality with QQ plot,histogram, and boxplot
 
-```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
+```{r, fig.height=2.6, fig.width=6}
 par(mfrow=c(1,3))
 qqnorm(data, main = "Normal Q-Q Plot of Birthweight")
 qqline(data,col=" red ")
@@ -200,22 +200,23 @@ A Two-sample t-test was conducted to examine whether the mean weight differs for
 
 The data seems correlated and normally distributed.
 
-```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
+```{r, fig.width=5,fig.height=3,collapse=TRUE}
 #library('tidyverse')
 cholesterol <- read.table("cholesterol.txt", header = TRUE)
 
 library(ggplot2)
 
 summary(cholesterol)
-par(mfrow=c(1,3))
 # Regression the 2 variables are highly correlated
 ggplot(cholesterol, aes(x = Before, y = After8weeks)) +
   geom_point() +
   geom_smooth(method = "lm") +
   labs(x = "Before", y = "After 8 weeks", title = "Scatter plot of cholesterol levels")
 cor(cholesterol$Before, cholesterol$After8weeks)
+```
 
-
+```{r, fig.width=5,fig.height=3,collapse=TRUE}
+par(mfrow=c(1,3))
 # creating histograms
 ggplot(cholesterol, aes(x = Before)) +
   geom_histogram(binwidth = 0.8) +
