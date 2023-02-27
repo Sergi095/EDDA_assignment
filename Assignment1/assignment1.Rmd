@@ -1,6 +1,6 @@
 ---
 title: "Assignment 1"
-author: "Group 61, Ikrame Zirar, Mohammed Majeed,Sergio Alejandro Gutierrez Maury"
+author: "Group 61, Ikrame Zirar, Mohammed Majeed, Sergio Alejandro Gutierrez Maury"
 date: "23 February 2023"
 output: pdf_document
 highlight: tango
@@ -94,7 +94,7 @@ Since the sample is assumed to follow a normal distribution, the bootstrapped co
 t.test(data, mu = 2800, alternative = "greater")
 ```
 
-performed a one-sample t-test with the null hypothesis$(H_{0})$ that the mean birthweight is equal to 2800 grams $(\mu = 2800)$ and the alternative hypothesis$(H_{1})$ that the mean birthweight is bigger than 2800 grams.The p-value is less than the confidence level of 0.05, which does give evidence against the null hypothesis. Therefore, we reject the null hypothesis and conclude that the mean birthweight is greater than 2800 grams. The confidence interval (CI) in the R-output for this test represents a range of values within which the true population mean birthweight is likely to fall with a certain degree of confidence. For a one-tailed test, we only obtain either a lower bound or upper bound, which we call a one-sided confidence interval. In our case, we only obtained a lower bound CI [2829.202 Inf].
+We performed a one-sample t-test with the null hypothesis$(H_{0})$ that the mean birthweight is equal to 2800 grams $(\mu = 2800)$ and the alternative hypothesis$(H_{1})$ that the mean birthweight is bigger than 2800 grams.The p-value is less than the confidence level of 0.05, which does give evidence against the null hypothesis. Therefore, we reject the null hypothesis and conclude that the mean birthweight is greater than 2800 grams. The confidence interval (CI) in the R-output for this test represents a range of values within which the true population mean birthweight is likely to fall with a certain degree of confidence. For a one-tailed test, we only obtain either a lower bound or upper bound, which we call a one-sided confidence interval. In our case, we only obtained a lower bound CI [2829.202 Inf].
 
 ```{r}
 # sign test
@@ -207,42 +207,53 @@ cholesterol <- read.table("cholesterol.txt", header = TRUE)
 library(ggplot2)
 
 summary(cholesterol)
-# Regression the 2 variables are highly correlated
-ggplot(cholesterol, aes(x = Before, y = After8weeks)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  labs(x = "Before", y = "After 8 weeks", title = "Scatter plot of cholesterol levels")
+
+shapiro.test(cholesterol$Before) # accept null, data is normal
+
+shapiro.test(cholesterol$After8weeks) # accept null, data is normal
+# checking difference
+diff <- cholesterol$Before - cholesterol$After8weeks
+shapiro.test(diff) # accept null, data is normal
 cor(cholesterol$Before, cholesterol$After8weeks)
 ```
 
 ```{r, fig.width=5,fig.height=3,collapse=TRUE}
-par(mfrow=c(1,3))
+# Regression the 2 variables are highly correlated
+regplot <- ggplot(cholesterol, aes(x = Before, y = After8weeks)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Before", y = "After 8 weeks", title = "Scatter plot of cholesterol levels")
+
 # creating histograms
-ggplot(cholesterol, aes(x = Before)) +
+hist1 <- ggplot(cholesterol, aes(x = Before)) +
   geom_histogram(binwidth = 0.8) +
   labs(x = "Before",
        y = "Count",
        title = "Histogram of cholesterol levels before diet")
 
-shapiro.test(cholesterol$Before) # accept null, data is normal
 
-ggplot(cholesterol, aes(x = After8weeks)) +
+
+hist2 <- ggplot(cholesterol, aes(x = After8weeks)) +
   geom_histogram(binwidth = 0.8) +
   labs(x = "After 8 weeks",
        y = "Count",
        title = "Histogram of cholesterol levels after 8 weeks on diet")
-shapiro.test(cholesterol$After8weeks) # accept null, data is normal
-# checking difference
-diff <- cholesterol$Before - cholesterol$After8weeks
 
-ggplot(cholesterol, aes(x = Before - After8weeks)) +
+hist3 <- ggplot(cholesterol, aes(x = Before - After8weeks)) +
   geom_histogram(binwidth = 0.2) +
   labs(
     x = "Difference in cholesterol levels",
        y = "Count",
        title = "Histogram of differences before and after diet")
 
-shapiro.test(diff) # accept null, data is normal
+
+```
+
+```{r, fig.width=5,fig.height=3,collapse=TRUE}
+#install.packages("gridExtra")
+require(gridExtra)
+#par(mfrow=c(1,4))
+grid.arrange(regplot, hist1, hist2, hist3, ncol=2)
 ```
 
 **B)** Given that the data set contains measurements of cholesterol levels before and after a low fat low cholesterol diet with the same individuals, the data are paired. Therefore, we can use paired tests to analyze the data.
@@ -454,7 +465,7 @@ legend("topleft", legend = c("Nitrogen Treatment", "No Nitrogen Treatment"),
 
 ```
 
-we can see that the average yield per block for the soil treated with nitrogen is higher than the average yield per block for the soil that did not receive nitrogen. This suggests that nitrogen had a positive effect on the yield of the crops.
+We can see that the average yield per block for the soil treated with nitrogen is higher than the average yield per block for the soil that did not receive nitrogen. This suggests that nitrogen had a positive effect on the yield of the crops.
 
 It is important to take the factor block into account because it helps to control for any differences in yield that may be due to variation in the environment across different blocks. By including block as a factor, we can estimate the effect of nitrogen on yield while controlling for any potential confounding effects of block. This helps to increase the accuracy and reliability of the estimated effect of nitrogen on yield.
 
