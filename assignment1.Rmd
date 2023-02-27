@@ -1,6 +1,6 @@
 ---
 title: "Assignment 1"
-author: "Group 61, Ikrame Zirar, <name>,<name>"
+author: "Group 61, Ikrame Zirar, Mohammed Majeed,<name>"
 date: "23 February 2023"
 output: pdf_document
 highlight: tango
