@@ -6,6 +6,10 @@ output: pdf_document
 highlight: tango
 ---
 
+```{r echo=FALSE}
+options(digits=3)
+```
+
 ## Exercise 1
 
 ```{r echo=FALSE}
