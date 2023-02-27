@@ -503,6 +503,8 @@ model with all factors summed is prefered, given that it is the model with most 
 **e)** According to the p-value, nitrogen has a significant effect on the yield. The fixed effects model in C shows similar results, where nitrogen also has a significant effect on the yield.
 
 ```{r}
+library(lme4)
+
 npklmer= lmer(yield~N+(1|block), REML=FALSE, data=npk)
 npklmer2=lmer(yield~(1|block), REML=FALSE, data=npk)
 npkmaov=anova(npklmer2, npklmer)
