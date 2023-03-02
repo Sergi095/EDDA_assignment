@@ -1,0 +1,45 @@
+---
+title: "Assignment 2"
+author: "Group 61, Ikrame Zirar, Mohammed Majeed, Sergio Alejandro Gutierrez Maury"
+date: "`r Sys.Date()`"
+output: pdf_document
+highlight: tango
+---
+
+## Excersice 1
+**A)**
+
+```{r}
+```
+
+## Excersice 2
+**A)**
+
+```{r}
+```
+
+**B)**
+
+```{r}
+```
+**C)**
+
+```{r}
+```
+**D)**
+
+```{r}
+```
+
+
+## Excersice 3
+**A)**
+
+```{r}
+```
+
+## Excersice 4
+**A)**
+
+```{r}
+```
