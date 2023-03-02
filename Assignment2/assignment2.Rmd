@@ -6,6 +6,10 @@ output: pdf_document
 highlight: tango
 ---
 
+```{r echo=FALSE}
+options(digits=3)
+```
+
 ## Excersice 1
 **A)**
 
@@ -15,20 +19,96 @@ highlight: tango
 ## Excersice 2
 **A)**
 
+
+
 ```{r}
+# scatterplots
+par(mfrow=c(2,3))
+plot(data$bad, data$expend, xlab="bad", ylab="expend")
+plot(data$crime, data$expend, xlab="crime", ylab="expend")
+plot(data$lawyers, data$expend, xlab="lawyers", ylab="expend")
+plot(data$employ, data$expend, xlab="employ", ylab="expend")
+plot(data$pop, data$expend, xlab="pop", ylab="expend")
+```
+
+
+```{r}
+library("reshape2")
+# calculate correlation matrix
+cor_matrix <- cor(data[, c("bad", "crime", "lawyers", "employ", "pop")])
+
+# plot correlation matrix
+ggplot(data = reshape2::melt(cor_matrix)) +
+  geom_tile(aes(x = Var1, y = Var2, fill = value)) +
+  scale_fill_gradient2(low = "blue", high = "red", midpoint = 0, 
+                       name = "Correlation") +
+  theme_minimal() +
+  labs(title = "Correlation Matrix of Explanatory Variables")
+
 ```
 
 **B)**
 
 ```{r}
+library(MASS)
+
+# fit full model
+full_model <- lm(expend ~ bad + crime + lawyers + employ + pop, data=data)
+
+# step-up method to find best model
+step_model <- stepAIC(full_model, direction="forward")
+
+print('full model')
+summary(full_model)
+print('step model')
+summary(step_model)
+
 ```
 **C)**
 
 ```{r}
+# create new data frame with hypothetical values
+new_data <- data.frame(bad=50, crime=5000, lawyers=5000, employ=5000, pop=5000)
+
+# predict expend using selected model
+predict(step_model, newdata=new_data, interval="prediction", level=0.95)
+
 ```
 **D)**
 
 ```{r}
+#install.packages("glmnet")
+library(glmnet)
+
+# Convert data to matrix
+x <- as.matrix(data[, c("bad", "crime", "lawyers", "employ", "pop")])
+y <- data$expend
+
+# Create LASSO model and choose lambda value using cross-validation
+lasso <- cv.glmnet(x, y, alpha = 1)
+
+cv.lasso <- cv.glmnet(x = as.matrix(data[, c("bad", "crime", "lawyers", "employ", "pop")]), y = data$expend, alpha = 1, nfolds = 10)
+lasso.coef <- coef(lasso.model, s = cv.lasso$lambda.1se)
+lasso.fit <- glmnet(x = data[, c("bad", "crime", "lawyers")], y = data$expend, alpha = 1)
+# Model obtained in part b)
+lm.fit <- lm(expend ~ bad + crime + lawyers + employ + pop, data = data)
+summary(lm.fit)
+
+# LASSO model
+lasso.fit <- glmnet(x = data[, c("bad", "crime", "lawyers")], y = data$expend, alpha = 1)
+lasso.coef <- coef(lasso.fit, s = cv.lasso$lambda.1se)[-1]
+lasso.coef <- as.numeric(lasso.coef)
+lasso.coef <- c(lasso.coef, rep(0, 2))
+lasso.names <- names(lasso.coef)[-1]
+lm.names <- names(coef(lm.fit))[-1]
+selected.names <- lm.names[lm.names %in% lasso.names]
+names(lasso.coef) <- selected.names
+
+summary(lm.fit, coef = lasso.coef)
+
+
+
+
 ```
 
 
