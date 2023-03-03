@@ -40,7 +40,7 @@ cor_matrix <- cor(data[, c("bad", "crime", "lawyers", "employ", "pop")])
 # plot correlation matrix
 ggplot(data = reshape2::melt(cor_matrix)) +
   geom_tile(aes(x = Var1, y = Var2, fill = value)) +
-  scale_fill_gradient2(low = "blue", high = "red", midpoint = 0, 
+  scale_fill_gradient2(low = "blue", high = "red", midpoint = 0,
                        name = "Correlation") +
   theme_minimal() +
   labs(title = "Correlation Matrix of Explanatory Variables")
@@ -119,7 +119,42 @@ summary(lm.fit, coef = lasso.coef)
 ```
 
 ## Excersice 4
-**A)**
+**a)**
+
+We check for correlation between all pairs of variables.The plot shows that there is no correlation.
+
+We perform Poisson regression and find that \texttt{oligarchy}, \texttt{pollib} and \texttt{parties} have a significant effect on\texttt{miltcoup}, because their p-values are <0.05.
 
 ```{r}
+data = read.table(file = "coups.txt", header = TRUE)
+pairs(data[,-1])
+```
+
+```{r}
+glmcoups = glm(miltcoup ~ oligarchy + pollib + parties + pctvote + popn + size + numelec + numregim, family = poisson, data = data)
+summary(glmcoups)
+```
+
+**b)**
+
+We will use the step-down approach to reduce the number of explanatory variables. This means we keep the variables that have the most significant effect.
+Analyzing the \texttt{summary} in a), we iterate through and remove the variables with the highest p-values. We end up with \texttt{oligarchy}, \texttt{pollib} and \texttt{parties}. Comparing the results to a), the step down approach model is ......
+```{r}
+glmcoups2 = glm(miltcoup~oligarchy+pollib+parties, family = poisson, data = data)
+summary(glmcoups2)
+```
+
+
+
+**c)**
+#Using the model from b), predict the number of coups for a hypothetical country for all the three levels of political liberalization and the (overall) averages of all the other (numerical) characteristics. Comment on your findings.
+
+The predicted average of coups per country increases as the policitical liberalization decreases.???
+
+```{r}
+avg1 =0.25138+0.09262*mean(data$oligarchy)-0.57410*0+0.02206*mean(data$parties)
+avg2 =0.25138+0.09262*mean(data$oligarchy)-0.57410*1+0.02206*mean(data$parties)
+avg3 =0.25138+0.09262*mean(data$oligarchy)-0.57410*2+0.02206*mean(data$parties)
+avg =c(exp(avg1), exp(avg2), exp(avg3))
+avg1; avg2; avg3; avg
 ```
