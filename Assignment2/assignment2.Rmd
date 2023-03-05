@@ -4,6 +4,9 @@ author: "Group 61, Ikrame Zirar, Mohammed Majeed, Sergio Alejandro Gutierrez Mau
 date: "`r Sys.Date()`"
 output: pdf_document
 highlight: tango
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r echo=FALSE}
@@ -11,15 +14,110 @@ options(digits=3)
 ```
 
 ## Excersice 1
+
 **A)**
+The dataset "treeVolume" contains a response variable, namely "Volume", and several explanatory variables, including "type", "height", and "diameter".
+To investigate the impact of tree type on volume, we conducted ANOVA using "Volume" as the response variable and "type" as the sole explanatory variable.
+The p-value from the ANOVA table indicates that there is no significant effect of tree type on tree volume.
 
 ```{r}
+# Load the dataset
+tree_data <- read.csv("treeVolume.txt", header = TRUE, sep = "")
+# Perform t-test
+model_aov <- aov(volume ~ type, data = tree_data)
+summary(model_aov)
+```
+
+We conducted a t-test to compare the means of these two sample groups.the p-value of the t-test indicates that the type of tree does not have a significant impact on its volume.
+
+```{r}
+# Perform t-test
+t_test <- t.test(volume ~ type, data = tree_data)
+t_test
+```
+The output of aggregate gives us the estimated volumes for the two tree types
+
+```{r}
+# Estimate the volumes for the two tree types
+aggregate(tree_data$volume, by = list(tree_data$type), mean)
+```
+
+
+**b)**
+To include diameter and height as explanatory variables into the analysis and investigate whether the influence of diameter and height on volume is similar for both tree types.
+
+```{r}
+# Fit a linear model with diameter and height as explanatory variables
+model_lm <- lm(volume ~ diameter + height + type, data = tree_data)
+summary(model_lm)
+```
+The below two ANOVA tables to investigate whether the influence of diameter and height on volume is similar for both tree types. In both cases, the interaction term is not significant, indicating that the influence of diameter and height on volume is similar for both tree types.
+
+```{r}
+# Perform ANOVA to investigate the influence of diameter on volume for both tree types
+model_aov_diameter <- aov(volume ~ diameter * type, data = tree_data)
+summary(model_aov_diameter)
+```
+
+```{r}
+# Perform ANOVA to investigate the influence of height on volume for both tree types
+model_aov_height <- aov(volume ~ height * type, data = tree_data)
+summary(model_aov_height)
+```
+
+**c)**
+
+The correlation coefficient is 0.519, indicating a moderate positive linear relationship between diameter and height of beech trees. The p-value is less than 0.05, indicating that there is strong evidence of a significant correlation between diameter and height of beech trees.
+
+Whereas the correlation coefficient of oak trees is -0.116, indicating a weak negative linear relationship between diameter and height of oak trees. The p-value is greater than 0.05, indicating that there is not enough evidence to reject the null hypothesis of no correlation between diameter and height of oak trees.
+
+```{r}
+par(mfrow=c(1, 2))
+plot(tree_data[tree_data$type == "beech", "diameter"],
+     tree_data[tree_data$type == "beech", "height"], 
+     xlab =  "beech * diameter", ylab = "beech * height")
+plot(tree_data[tree_data$type == "oak", "diameter"],
+     tree_data[tree_data$type == "oak", "height"], 
+     xlab =  "oak * diameter", ylab = "oak * height")
+
+cor.test(tree_data[tree_data$type == "beech", "diameter"],
+         tree_data[tree_data$type == "beech", "height"])
+cor.test(tree_data[tree_data$type == "oak", "diameter"], 
+         tree_data[tree_data$type == "oak", "height"])
+```
+
+Using the results from b), we can investigate how diameter, height, and type influence volume. To predict the volume for a tree with the overall average diameter and height.
+```{r}
+# Calculate the overall average diameter and height
+avg_diameter <- mean(tree_data$diameter)
+avg_height <- mean(tree_data$height)
+
+# Predict the volume for a tree with the overall average diameter and height
+predict(model_lm, newdata = data.frame(diameter = avg_diameter, height = avg_height, type = "beech"), interval = "confidence")
+```
+
+
+**d)**
+It seems like there may be a natural relationship between the volume of a tree and its height and diameter. One possible transformation to consider is taking the logarithm of both height and diameter to create new variables, which may better capture the relationship with volume.
+
+Both models have high R-squared values, indicating that they explain a large proportion of the variation in the response variable. However, the first model has a slightly higher R-squared value of 0.977 compared to the second model's (with no transformation) R-squared value of 0.951. This suggests that the first model may be a slightly better fit for the data.
+```{r}
+
+# fit a linear model with the transformed variables
+transformed_model <- lm(log(volume) ~ log(tree_data$height) + log(tree_data$diameter) + type, data=tree_data)
+# print the summary of the model to check the results
+summary(transformed_model);
+
+# fit a linear model with the transformed variables
+model <- lm(volume ~ tree_data$height + tree_data$diameter + type, data=tree_data)
+# print the summary of the model to check the results
+summary(model);
+
 ```
 
 ## Excersice 2
+
 **A)**
-
-
 
 ```{r}
 # scatterplots
@@ -30,7 +128,6 @@ plot(data$lawyers, data$expend, xlab="lawyers", ylab="expend")
 plot(data$employ, data$expend, xlab="employ", ylab="expend")
 plot(data$pop, data$expend, xlab="pop", ylab="expend")
 ```
-
 
 ```{r}
 library("reshape2")
@@ -64,6 +161,7 @@ print('step model')
 summary(step_model)
 
 ```
+
 **C)**
 
 ```{r}
@@ -74,6 +172,7 @@ new_data <- data.frame(bad=50, crime=5000, lawyers=5000, employ=5000, pop=5000)
 predict(step_model, newdata=new_data, interval="prediction", level=0.95)
 
 ```
+
 **D)**
 
 ```{r}
@@ -111,19 +210,20 @@ summary(lm.fit, coef = lasso.coef)
 
 ```
 
-
 ## Excersice 3
+
 **A)**
 
 ```{r}
 ```
 
 ## Excersice 4
+
 **a)**
 
 We check for correlation between all pairs of variables.The plot shows that there is no correlation.
 
-We perform Poisson regression and find that \texttt{oligarchy}, \texttt{pollib} and \texttt{parties} have a significant effect on\texttt{miltcoup}, because their p-values are <0.05.
+We perform Poisson regression and find that \texttt{oligarchy}, \texttt{pollib} and \texttt{parties} have a significant effect on\texttt{miltcoup}, because their p-values are \<0.05.
 
 ```{r}
 data = read.table(file = "coups.txt", header = TRUE)
@@ -137,17 +237,19 @@ summary(glmcoups)
 
 **b)**
 
-We will use the step-down approach to reduce the number of explanatory variables. This means we keep the variables that have the most significant effect.
-Analyzing the \texttt{summary} in a), we iterate through and remove the variables with the highest p-values. We end up with \texttt{oligarchy}, \texttt{pollib} and \texttt{parties}. Comparing the results to a), the step down approach model is ......
+We will use the step-down approach to reduce the number of explanatory variables.
+This means we keep the variables that have the most significant effect.
+Analyzing the \texttt{summary} in a), we iterate through and remove the variables with the highest p-values.
+We end up with \texttt{oligarchy}, \texttt{pollib} and \texttt{parties}.
+Comparing the results to a), the step down approach model is ......
+
 ```{r}
 glmcoups2 = glm(miltcoup~oligarchy+pollib+parties, family = poisson, data = data)
 summary(glmcoups2)
 ```
 
-
-
-**c)**
-#Using the model from b), predict the number of coups for a hypothetical country for all the three levels of political liberalization and the (overall) averages of all the other (numerical) characteristics. Comment on your findings.
+**c)** #Using the model from b), predict the number of coups for a hypothetical country for all the three levels of political liberalization and the (overall) averages of all the other (numerical) characteristics.
+Comment on your findings.
 
 The predicted average of coups per country increases as the policitical liberalization decreases.???
 
