@@ -15,8 +15,7 @@ options(digits=3)
 
 ## Excersice 1
 
-**A)**
-The dataset "treeVolume" contains a response variable, namely "Volume", and several explanatory variables, including "type", "height", and "diameter".
+**A)** The dataset "treeVolume" contains a response variable, namely "Volume", and several explanatory variables, including "type", "height", and "diameter".
 To investigate the impact of tree type on volume, we conducted ANOVA using "Volume" as the response variable and "type" as the sole explanatory variable.
 The p-value from the ANOVA table indicates that there is no significant effect of tree type on tree volume.
 
@@ -35,6 +34,7 @@ We conducted a t-test to compare the means of these two sample groups.the p-valu
 t_test <- t.test(volume ~ type, data = tree_data)
 t_test
 ```
+
 The output of aggregate gives us the estimated volumes for the two tree types
 
 ```{r}
@@ -42,16 +42,16 @@ The output of aggregate gives us the estimated volumes for the two tree types
 aggregate(tree_data$volume, by = list(tree_data$type), mean)
 ```
 
-
-**b)**
-To include diameter and height as explanatory variables into the analysis and investigate whether the influence of diameter and height on volume is similar for both tree types.
+**b)** To include diameter and height as explanatory variables into the analysis and investigate whether the influence of diameter and height on volume is similar for both tree types.
 
 ```{r}
 # Fit a linear model with diameter and height as explanatory variables
 model_lm <- lm(volume ~ diameter + height + type, data = tree_data)
 summary(model_lm)
 ```
-The below two ANOVA tables to investigate whether the influence of diameter and height on volume is similar for both tree types. In both cases, the interaction term is not significant, indicating that the influence of diameter and height on volume is similar for both tree types.
+
+The below two ANOVA tables to investigate whether the influence of diameter and height on volume is similar for both tree types.
+In both cases, the interaction term is not significant, indicating that the influence of diameter and height on volume is similar for both tree types.
 
 ```{r}
 # Perform ANOVA to investigate the influence of diameter on volume for both tree types
@@ -67,9 +67,11 @@ summary(model_aov_height)
 
 **c)**
 
-The correlation coefficient is 0.519, indicating a moderate positive linear relationship between diameter and height of beech trees. The p-value is less than 0.05, indicating that there is strong evidence of a significant correlation between diameter and height of beech trees.
+The correlation coefficient is 0.519, indicating a moderate positive linear relationship between diameter and height of beech trees.
+The p-value is less than 0.05, indicating that there is strong evidence of a significant correlation between diameter and height of beech trees.
 
-Whereas the correlation coefficient of oak trees is -0.116, indicating a weak negative linear relationship between diameter and height of oak trees. The p-value is greater than 0.05, indicating that there is not enough evidence to reject the null hypothesis of no correlation between diameter and height of oak trees.
+Whereas the correlation coefficient of oak trees is -0.116, indicating a weak negative linear relationship between diameter and height of oak trees.
+The p-value is greater than 0.05, indicating that there is not enough evidence to reject the null hypothesis of no correlation between diameter and height of oak trees.
 
 ```{r}
 par(mfrow=c(1, 2))
@@ -86,7 +88,9 @@ cor.test(tree_data[tree_data$type == "oak", "diameter"],
          tree_data[tree_data$type == "oak", "height"])
 ```
 
-Using the results from b), we can investigate how diameter, height, and type influence volume. To predict the volume for a tree with the overall average diameter and height.
+Using the results from b), we can investigate how diameter, height, and type influence volume.
+To predict the volume for a tree with the overall average diameter and height.
+
 ```{r}
 # Calculate the overall average diameter and height
 avg_diameter <- mean(tree_data$diameter)
@@ -96,11 +100,13 @@ avg_height <- mean(tree_data$height)
 predict(model_lm, newdata = data.frame(diameter = avg_diameter, height = avg_height, type = "beech"), interval = "confidence")
 ```
 
+**d)** It seems like there may be a natural relationship between the volume of a tree and its height and diameter.
+One possible transformation to consider is taking the logarithm of both height and diameter to create new variables, which may better capture the relationship with volume.
 
-**d)**
-It seems like there may be a natural relationship between the volume of a tree and its height and diameter. One possible transformation to consider is taking the logarithm of both height and diameter to create new variables, which may better capture the relationship with volume.
+Both models have high R-squared values, indicating that they explain a large proportion of the variation in the response variable.
+However, the first model has a slightly higher R-squared value of 0.977 compared to the second model's (with no transformation) R-squared value of 0.951.
+This suggests that the first model may be a slightly better fit for the data.
 
-Both models have high R-squared values, indicating that they explain a large proportion of the variation in the response variable. However, the first model has a slightly higher R-squared value of 0.977 compared to the second model's (with no transformation) R-squared value of 0.951. This suggests that the first model may be a slightly better fit for the data.
 ```{r}
 
 # fit a linear model with the transformed variables
@@ -215,7 +221,37 @@ summary(lm.fit, coef = lasso.coef)
 **A)**
 
 ```{r}
+#install.packages("Hmisc")
+library(ggplot2)
+library(Hmisc)
 ```
+
+```{r}
+data_titanic <- read.table("titanic.txt", header=TRUE)
+
+plot(xtabs(~Survived + PClass + Sex, titanic))
+
+```
+```{r}
+ggplot(data=titanic, aes(x=Sex, fill=Survived)) + geom_bar(position="dodge")
+
+```
+
+```{r}
+v <- c('PClass','Survived','Age','Sex')
+titanic <- data_titanic[, v]
+describe(titanic,na.rm = TRUE, interp=FALSE,skew = TRUE, ranges = TRUE,trim=.1,
+              type=3,check=TRUE,fast=NULL,quant=NULL,IQR=FALSE,omit=FALSE,data=NULL)
+```
+
+```{r}
+model  <- glm(Survived ~ PClass + Age + Sex, data = data_titanic, family = binomial())
+summary(model_log1)
+```
+
+we can exponentiate their coefficients to get the odds ratios for survival. For example, the odds ratio for PClass2nd is exp(-1.29196) = 0.274, which suggests that passengers in second-class were 0.274 times as likely to survive as passengers in first-class. Similarly, the odds ratio for Age is exp(-0.03918) = 0.962, which means that for each one-unit increase in age, the odds of survival decrease by a factor of 0.962. The odds ratio for Sexmale is exp(-2.63136) = 0.072, which suggests that males were 0.072 times as likely to survive as females.
+
+
 
 ## Excersice 4
 
