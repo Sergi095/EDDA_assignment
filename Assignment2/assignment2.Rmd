@@ -267,9 +267,15 @@ we can exponentiate their coefficients to get the odds ratios for survival. For 
 
 
 
+
+**3C)**
+```{r}
+
+```
+
 ## Excersice 4
 
-**a)**
+**A)**
 
 We check for correlation between all pairs of variables.The plot shows that there is no correlation.
 
@@ -285,7 +291,7 @@ glmcoups = glm(miltcoup ~ oligarchy + pollib + parties + pctvote + popn + size +
 summary(glmcoups)
 ```
 
-**b)**
+**B)**
 
 We will use the step-down approach to reduce the number of explanatory variables.
 This means we keep the variables that have the most significant effect.
@@ -298,7 +304,7 @@ glmcoups2 = glm(miltcoup~oligarchy+pollib+parties, family = poisson, data = data
 summary(glmcoups2)
 ```
 
-**c)** #Using the model from b), predict the number of coups for a hypothetical country for all the three levels of political liberalization and the (overall) averages of all the other (numerical) characteristics.
+**C)** #Using the model from b), predict the number of coups for a hypothetical country for all the three levels of political liberalization and the (overall) averages of all the other (numerical) characteristics.
 Comment on your findings.
 
 The predicted average of coups per country increases as the policitical liberalization decreases.???
