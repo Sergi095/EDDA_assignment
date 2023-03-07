@@ -243,11 +243,11 @@ library(Hmisc)
 ```{r}
 data_titanic <- read.table("titanic.txt", header=TRUE)
 
-plot(xtabs(~Survived + PClass + Sex, titanic))
+plot(xtabs(~Survived + PClass + Sex, data_titanic))
 
 ```
 ```{r}
-ggplot(data=titanic, aes(x=Sex, fill=Survived)) + geom_bar(position="dodge")
+ggplot(data=data_titanic, aes(x=Sex, fill=Survived)) + geom_bar(position="dodge")
 
 ```
 
@@ -260,7 +260,7 @@ describe(titanic,na.rm = TRUE, interp=FALSE,skew = TRUE, ranges = TRUE,trim=.1,
 
 ```{r}
 model  <- glm(Survived ~ PClass + Age + Sex, data = data_titanic, family = binomial())
-summary(model_log1)
+summary(model)
 ```
 
 we can exponentiate their coefficients to get the odds ratios for survival. For example, the odds ratio for PClass2nd is exp(-1.29196) = 0.274, which suggests that passengers in second-class were 0.274 times as likely to survive as passengers in first-class. Similarly, the odds ratio for Age is exp(-0.03918) = 0.962, which means that for each one-unit increase in age, the odds of survival decrease by a factor of 0.962. The odds ratio for Sexmale is exp(-2.63136) = 0.072, which suggests that males were 0.072 times as likely to survive as females.
