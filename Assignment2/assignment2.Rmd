@@ -229,40 +229,6 @@ mse.lasso=mean((y.test-y.pred)^2) #mse for the predicted test rows
 
 ```
 
-```{r}
-#install.packages("glmnet")
-library(glmnet)
-
-# Convert data to matrix
-x <- as.matrix(data[, c("bad", "crime", "lawyers", "employ", "pop")])
-y <- data$expend
-
-# Create LASSO model and choose lambda value using cross-validation
-lasso.model <- cv.glmnet(x, y, alpha = 1)
-
-cv.lasso <- cv.glmnet(x = as.matrix(data[, c("bad", "crime", "lawyers", "employ", "pop")]), y = data$expend, alpha = 1, nfolds = 10)
-lasso.coef <- coef(lasso.model, s = cv.lasso$lambda.1se)
-lasso.fit <- glmnet(x = data[, c("bad", "crime", "lawyers")], y = data$expend, alpha = 1)
-# Model obtained in part b)
-lm.fit <- lm(expend ~ bad + crime + lawyers + employ + pop, data = data)
-summary(lm.fit)
-
-# LASSO model
-lasso.fit <- glmnet(x = data[, c("bad", "crime", "lawyers")], y = data$expend, alpha = 1)
-lasso.coef <- coef(lasso.fit, s = cv.lasso$lambda.1se)[-1]
-lasso.coef <- as.numeric(lasso.coef)
-lasso.coef <- c(lasso.coef, rep(0, 2))
-lasso.names <- names(lasso.coef)[-1]
-lm.names <- names(coef(lm.fit))[-1]
-selected.names <- lm.names[lm.names %in% lasso.names]
-names(lasso.coef) <- selected.names
-
-summary(lm.fit, coef = lasso.coef)
-
-
-
-
-```
 
 ## Excersice 3
 
