@@ -137,6 +137,7 @@ boxplot(data$employ, data = data, notch = TRUE, varwidth = TRUE, main = "Employ"
 boxplot(data$pop, data = data, notch = TRUE, varwidth = TRUE, main = "pop")
 boxplot(data$expend, data = data, notch = TRUE, varwidth = TRUE, main = "Expend")
 ```
+
 ```{r}
 par(mfrow=c(2,2), mar=c(2,1,2,2))
 library(MASS)
@@ -152,9 +153,6 @@ plot(rlm_fit4)
 plot(rlm_fit5)
 
 ```
-
-
-
 
 ```{r}
 library("reshape2")
@@ -189,10 +187,9 @@ full_model.step <- stepAIC(full_model, direction="both")
 summary(full_model.step)
 ```
 
-**C)**
-pending question: can you improve the interval?
+**C)** pending question: can you improve the interval?
 
-The interval is: $ (-192.8264, 805.6644)$ 
+The interval is: \$ (-192.8264, 805.6644)\$
 
 ```{r}
 # create new data frame with hypothetical values
@@ -223,21 +220,25 @@ plot(lasso.mod,label=T,xvar="lambda") #have a look at the lasso path
 plot(cv.lasso) # the best lambda by cross-validation
 plot(cv.lasso$glmnet.fit,xvar="lambda",label=T)
 lambda.min=cv.lasso$lambda.min; lambda.1se=cv.lasso$lambda.1se
-coef(lasso.model,s=cv.lasso$lambda.min) #beta’s for the best lambda
-y.pred=predict(lasso.model,s=lambda.min,newx=x.test) #predict for test
+coef(lasso.mod,s=cv.lasso$lambda.min) #beta’s for the best lambda
+y.pred=predict(lasso.mod,s=lambda.min,newx=x.test) #predict for test
 mse.lasso=mean((y.test-y.pred)^2) #mse for the predicted test rows
 
 ```
-
 
 ## Excersice 3
 
 **A)**
 
 ```{r}
+# install.packages("rms",dependencies = TRUE)
 #install.packages("Hmisc")
-library(ggplot2)
-library(Hmisc)
+# 
+library(ggplot2);
+library(Hmisc);
+library(rms);
+library(rmsb);
+
 ```
 
 ```{r}
@@ -246,16 +247,22 @@ data_titanic <- read.table("titanic.txt", header=TRUE)
 plot(xtabs(~Survived + PClass + Sex, data_titanic))
 
 ```
-```{r}
-ggplot(data=data_titanic, aes(x=Sex, fill=Survived)) + geom_bar(position="dodge")
 
+```{r}
+options(prType='html')
+v <- c('PClass','Survived','Age','Sex')
+titanic <- data_titanic[, v]
+describe(titanic)
 ```
 
 ```{r}
-v <- c('PClass','Survived','Age','Sex')
-titanic <- data_titanic[, v]
-describe(titanic,na.rm = TRUE, interp=FALSE,skew = TRUE, ranges = TRUE,trim=.1,
-              type=3,check=TRUE,fast=NULL,quant=NULL,IQR=FALSE,omit=FALSE,data=NULL)
+# spar(ps=4,rt=3)spar
+dd <- datadist(titanic)
+# describe distributions of variables to rms
+options(datadist='dd')
+s <- summary(Survived ~ Age + Sex + PClass , data=titanic)
+plot(s, main='', subtitles=FALSE)
+
 ```
 
 ```{r}
@@ -263,12 +270,13 @@ model  <- glm(Survived ~ PClass + Age + Sex, data = data_titanic, family = binom
 summary(model)
 ```
 
-we can exponentiate their coefficients to get the odds ratios for survival. For example, the odds ratio for PClass2nd is exp(-1.29196) = 0.274, which suggests that passengers in second-class were 0.274 times as likely to survive as passengers in first-class. Similarly, the odds ratio for Age is exp(-0.03918) = 0.962, which means that for each one-unit increase in age, the odds of survival decrease by a factor of 0.962. The odds ratio for Sexmale is exp(-2.63136) = 0.072, which suggests that males were 0.072 times as likely to survive as females.
-
-
-
+we can exponentiate their coefficients to get the odds ratios for survival.
+For example, the odds ratio for PClass2nd is exp(-1.29196) = 0.274, which suggests that passengers in second-class were 0.274 times as likely to survive as passengers in first-class.
+Similarly, the odds ratio for Age is exp(-0.03918) = 0.962, which means that for each one-unit increase in age, the odds of survival decrease by a factor of 0.962.
+The odds ratio for Sexmale is exp(-2.63136) = 0.072, which suggests that males were 0.072 times as likely to survive as females.
 
 **3C)**
+
 ```{r}
 
 ```
