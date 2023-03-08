@@ -219,7 +219,7 @@ pred
 
 Comparing the lasso model with the step-up model, the lasso model set the variables
 "bad" and "crime" to zero, which means that those variables are not important.
-As a result, we end up with a mnuch simpler model.
+As a result, we end up with a much simpler model.
 ```{r}
 set.seed(73) #sheldon prime !
 library(glmnet)
@@ -293,9 +293,7 @@ The odds ratio for Sexmale is exp(-2.63136) = 0.072, which suggests that males w
 
 **3C)**
 
-```{r}
-
-```
+We could use Logistic Regression to model the probability of a certain passenger surviving or not. To evaluate the model, we could use $R^2$ or Accuracy. To implement the model, we would need to clean the dataset, handling missing values, encoding the categorical variables, and normalizing the numerical variables.
 
 ## Excersice 4
 
