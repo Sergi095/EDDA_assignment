@@ -2,10 +2,12 @@
 title: "Assignment 2"
 author: "Group 61, Ikrame Zirar, Mohammed Majeed, Sergio Alejandro Gutierrez Maury"
 date: "`r Sys.Date()`"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 highlight: tango
-editor_options: 
-  markdown: 
+editor_options:
+  markdown:
     wrap: sentence
 ---
 
@@ -125,10 +127,7 @@ summary(model);
 
 **A)**
 
-It can be seen from the box plots, that there are some outliers that might be
-influential, and from the leverage vs residuals plots we can see that, this is
-indeed the case.
-
+It can be seen from the box plots, that there are some outliers that might be influential, and from the leverage vs residuals plots we can see that, this is indeed the case.
 
 ```{r}
 data <- read.csv("expensescrime.txt", header = TRUE, sep = " ")
@@ -159,8 +158,7 @@ plot(rlm_fit5)
 
 ```
 
-By looking at the correlation matrix, it can be seen that there are some multicollinearity
-problems, since the variable "bad" is highly correlated with other independent variables.
+By looking at the correlation matrix, it can be seen that there are some multicollinearity problems, since the variable "bad" is highly correlated with other independent variables.
 
 ```{r}
 library("reshape2")
@@ -183,8 +181,7 @@ pairs(cor_matrix)
 
 **B)**
 
-
-The setp-up method selects as best model: $ \hat{expend} = \beta_{0} + \beta_{1} \cdot bad + \beta_{2} \cdot  lawyers + \beta_{3} \cdot  employ + \beta_{4} \cdot  pop$ 
+The setp-up method selects as best model: \$ \hat{expend} = \beta*{0} +* \beta{1} \cdot bad + \beta*{2}* \cdot  lawyers + \beta{3} \cdot  employ + \beta\_{4} \cdot  pop\$
 
 where all coefficients are significant with at least $5\%$ level.
 
@@ -202,7 +199,7 @@ summary(full_model.step)
 
 **C)** pending question: can you improve the interval?
 
-The interval is: $ (-192.8264, 805.6644)$
+The interval is: \$ (-192.8264, 805.6644)\$
 
 ```{r}
 # create new data frame with hypothetical values
@@ -217,9 +214,9 @@ pred
 
 **D)**
 
-Comparing the lasso model with the step-up model, the lasso model set the variables
-"bad" and "crime" to zero, which means that those variables are not important.
+Comparing the lasso model with the step-up model, the lasso model set the variables "bad" and "crime" to zero, which means that those variables are not important.
 As a result, we end up with a much simpler model.
+
 ```{r}
 set.seed(73) #sheldon prime !
 library(glmnet)
@@ -258,31 +255,30 @@ library(rmsb);
 ```
 
 ```{r}
-data_titanic <- read.table("titanic.txt", header=TRUE)
-
-plot(xtabs(~Survived + PClass + Sex, data_titanic))
+titanic_df <- read.table("titanic.txt", header=TRUE)
+plot(xtabs(~Survived + PClass + Sex, titanic_df))
 
 ```
 
 ```{r}
-options(prType='html')
+# options(prType='html')
 v <- c('PClass','Survived','Age','Sex')
-titanic <- data_titanic[, v]
+titanic <- titanic_df[, v]
 describe(titanic)
 ```
 
 ```{r}
-# spar(ps=4,rt=3)spar
-dd <- datadist(titanic)
+# # spar(ps=4,rt=3)spar
+dd <- datadist(titanic_df)
 # describe distributions of variables to rms
 options(datadist='dd')
-s <- summary(Survived ~ Age + Sex + PClass , data=titanic)
+s <- summary(Survived ~ Age + Sex + PClass , data=titanic_df)
 plot(s, main='', subtitles=FALSE)
 
 ```
 
 ```{r}
-model  <- glm(Survived ~ PClass + Age + Sex, data = data_titanic, family = binomial())
+model  <- glm(Survived ~ PClass + Age + Sex, data = titanic_df, family = binomial())
 summary(model)
 ```
 
@@ -291,9 +287,56 @@ For example, the odds ratio for PClass2nd is exp(-1.29196) = 0.274, which sugges
 Similarly, the odds ratio for Age is exp(-0.03918) = 0.962, which means that for each one-unit increase in age, the odds of survival decrease by a factor of 0.962.
 The odds ratio for Sexmale is exp(-2.63136) = 0.072, which suggests that males were 0.072 times as likely to survive as females.
 
+```{r}
+f <- lrm(Survived ~ Sex + PClass + rcs(Age,4), data=titanic_df)
+p <- Predict(f, Age, Sex, PClass, fun=plogis)
+plot <- ggplot(p)
+plot + ggtitle("The predicted survival probability ")
+
+```
+
+**3B)**
+The model with interactions between Age and PClass and between Age and Sex does not seem to improve the fit substantially as compared to the simpler model with main effects of PClass, Age, and Sex.
+
+Firstly, the coefficients for Age and its interactions in the more complex model are not statistically significant, indicating that the effect of Age on survival does not vary significantly across different PClass or Sex groups.
+
+Secondly, the inclusion of interaction terms increases the complexity of the model without much improvement in AIC, indicating that the simpler model is more parsimonious and hence preferable.
+
+Therefore, we can choose the simpler model with main effects of PClass, Age, and Sex as given in A) as the resulting model.
+
+```{r}
+# Fit a logistic regression model with interactions
+model3 <- glm(Survived ~ PClass * Sex * Age, data = titanic_df, family = "binomial")
+summary(model3)
+```
+
+
+```{r}
+# Create a new dataset with all possible combinations of PClass, Sex, and Age
+newdata <- expand.grid(PClass = c("1st", "2nd", "3rd"),
+                       Sex = c("male", "female"),
+                       Age = 55)
+# Add a column with predicted survival probabilities
+newdata$Survival_Probability <- predict(model3, newdata, type = "response")
+head(newdata)
+```
+The table provides the survival probabilities for six different combinations of PClass, Sex, and Age, based on the model used to analyze the Titanic dataset. 
+according to the table, a 55-year-old male passenger in 1st class had a survival probability of 0.18566, while a 55-year-old female passenger in 1st class had a much higher survival probability of 0.96005. Similarly, a 55-year-old male passenger in 2nd class had a very low survival probability of 0.00206, while a 55-year-old female passenger in 2nd class had a much higher survival probability of 0.77673.
+
+```{r}
+p<- ggplot(newdata, aes(x = PClass, y = Survival_Probability, fill = Sex)) + 
+  geom_bar(stat = "identity", position = "dodge") + 
+  theme_bw()
+p + ggtitle("Probability of survival for age 55")
+```
+
+
+
 **3C)**
 
-We could use Logistic Regression to model the probability of a certain passenger surviving or not. To evaluate the model, we could use $R^2$ or Accuracy. To implement the model, we would need to clean the dataset, handling missing values, encoding the categorical variables, and normalizing the numerical variables.
+We could use Logistic Regression to model the probability of a certain passenger surviving or not.
+To evaluate the model, we could use $R^2$ or Accuracy.
+To implement the model, we would need to clean the dataset, handling missing values, encoding the categorical variables, and normalizing the numerical variables.
 
 ## Excersice 4
 
