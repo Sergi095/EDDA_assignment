@@ -2,13 +2,8 @@
 title: "Assignment 2"
 author: "Group 61, Ikrame Zirar, Mohammed Majeed, Sergio Alejandro Gutierrez Maury"
 date: "`r Sys.Date()`"
-output:
-  html_document:
-    df_print: paged
+output: pdf_document
 highlight: tango
-editor_options:
-  markdown:
-    wrap: sentence
 ---
 
 ```{r echo=FALSE}
@@ -181,7 +176,7 @@ pairs(cor_matrix)
 
 **B)**
 
-The setp-up method selects as best model: $ \hat{expend} = \beta_{0} + \beta_{1} \cdot bad + \beta_{2} \cdot  lawyers + \beta_{3} \cdot  employ + \beta_{4} \cdot  pop$
+The setp-up method selects as best model: $\hat{e}=\beta_{0}+\beta_{1} \cdot bad + \beta_{2} \cdot  lawyers + \beta_{3} \cdot  employ + \beta_{4} \cdot  pop$
 
 where all coefficients are significant with at least $5\%$ level.
 
@@ -199,7 +194,7 @@ summary(full_model.step)
 
 **C)** pending question: can you improve the interval?
 
-The interval is: \$ (-192.8264, 805.6644)\$
+The interval is: $ (-192.8264, 805.6644)$
 
 ```{r}
 # create new data frame with hypothetical values
