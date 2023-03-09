@@ -181,7 +181,7 @@ pairs(cor_matrix)
 
 **B)**
 
-The setp-up method selects as best model: \$ \hat{expend} = \beta*{0} +* \beta{1} \cdot bad + \beta*{2}* \cdot  lawyers + \beta{3} \cdot  employ + \beta\_{4} \cdot  pop\$
+The setp-up method selects as best model: $ \hat{expend} = \beta_{0} + \beta_{1} \cdot bad + \beta_{2} \cdot  lawyers + \beta_{3} \cdot  employ + \beta_{4} \cdot  pop$
 
 where all coefficients are significant with at least $5\%$ level.
 
