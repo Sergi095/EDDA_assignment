@@ -64,11 +64,11 @@ Visualize the relationship between diameter, height, and volume for each tree ty
 
 ```{r}
 library(ggplot2)
-ggplot(data = tree_data, aes(x = diameter, y = volume, color = type)) + 
+ggplot(data = tree_data, aes(x = diameter, y = volume, color = type)) +
   geom_point() +
   labs(x = "Diameter", y = "Volume") +
   facet_wrap(~type)
-ggplot(data = tree_data, aes(x = height, y = volume, color = type)) + 
+ggplot(data = tree_data, aes(x = height, y = volume, color = type)) +
   geom_point() +
   labs(x = "Height", y = "Volume") +
   facet_wrap(~type)
@@ -255,7 +255,7 @@ mse.lasso=mean((y.test-y.pred)^2) #mse for the predicted test rows
 ```{r}
 # install.packages("rms",dependencies = TRUE)
 #install.packages("Hmisc")
-# 
+#
 library(ggplot2);
 library(Hmisc);
 library(rms);
@@ -309,7 +309,7 @@ plot + ggtitle("The predicted survival probability ")
 
 ```
 
-**3B)** Investigate the interaction of predictor Age with PClass.
+**B)** Investigate the interaction of predictor Age with PClass.
 
 ```{r}
 model4 <-glm(Survived ~ Age*PClass, data = titanic_df, family = binomial)
@@ -326,7 +326,7 @@ anova(model5, test="Chisq")
 Based on the analysis of deviance tables, it appears that PClass, Sex, and the interaction between Age and Sex are significant predictors of survival in the given dataset. The p-value for PClass was extremely small, indicating a very strong association between PClass and survival. Similarly, the p-value for Sex was likely also very small, given that it was reported as significant in the analysis. The interaction between Age and Sex was also found to be a significant predictor, which suggests that the relationship between Age and survival may differ depending on the individual's sex.
 
 ```{r}
-# Fit a logistic regression model 
+# Fit a logistic regression model
 model3 <- glm(Survived ~ PClass + Sex + Age:Sex, data = titanic_df, family = "binomial")
 summary(model3)
 ```
@@ -344,15 +344,44 @@ head(newdata)
 ```
 
 ```{r}
-p<- ggplot(newdata, aes(x = PClass, y = Survival_Probability, fill = Sex)) + 
-  geom_bar(stat = "identity", position = "dodge") + 
+p<- ggplot(newdata, aes(x = PClass, y = Survival_Probability, fill = Sex)) +
+  geom_bar(stat = "identity", position = "dodge") +
   theme_bw()
 p + ggtitle("Probability of survival for age 55")
 ```
 
-**3C)**
+**C)**
 
 We could use Logistic Regression to model the probability of a certain passenger surviving or not. To evaluate the model, we could use $R^2$ or Accuracy. To implement the model, we would need to clean the dataset, handling missing values, encoding the categorical variables, and normalizing the numerical variables.
+
+**D)**
+
+We want to test whether
+H0: row  variable  and  column variable  are  independent.
+The p-value is \, so we .... the H0.
+```{r}
+conttest=xtabs(Survived~Sex+PClass, data=titanic_df)
+rowsums=apply(conttest,1,sum); colsums=apply(conttest,2,sum)
+total=sum(conttest); expected=(rowsums%*%t(colsums))/total
+round(expected,0)
+sum((conttest-expected)^2/expected)
+
+```
+
+
+```{r}
+#1-pchisq() #can someone check this one
+z=chisq.test(conttest)
+z
+```
+
+
+**E)**
+Contingency tables are for checking independence or to check if distributions are homogeneous, so yes we would say it is wrong to use it for prediction.
+
+An advantage and disadvantage of Logistic Regression and contingency tables relative to each other are .......
+
+
 
 ## Excersice 4
 
@@ -360,30 +389,46 @@ We could use Logistic Regression to model the probability of a certain passenger
 
 We check for correlation between all pairs of variables.The plot shows that there is no correlation.
 
-We perform Poisson regression and find that \texttt{oligarchy}, \texttt{pollib} and \texttt{parties} have a significant effect on\texttt{miltcoup}, because their p-values are \<0.05.
+We perform Poisson regression and find that oligarchy, pollib and parties have a significant effect on miltcoup, because their p-values are \<0.05.
 
 ```{r}
-data = read.table(file = "coups.txt", header = TRUE)
+data=read.table(file= "coups.txt", header=TRUE)
 pairs(data[,-1])
 ```
 
-```{r}
-glmcoups = glm(miltcoup ~ oligarchy + pollib + parties + pctvote + popn + size + numelec + numregim, family = poisson, data = data)
+```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
+glmcoups=glm(miltcoup~oligarchy+pollib+parties+pctvote+popn+size+numelec+numregim, family=poisson, data=data)
 summary(glmcoups)
 ```
 
 **B)**
 
-We will use the step-down approach to reduce the number of explanatory variables. This means we keep the variables that have the most significant effect. Analyzing the \texttt{summary} in a), we iterate through and remove the variables with the highest p-values. We end up with \texttt{oligarchy}, \texttt{pollib} and \texttt{parties}. Comparing the results to a), the step down approach model is ......
+We will use the step-down approach to reduce the number of explanatory variables. This means we keep the variables that have the most significant effect. Analyzing the summaries, we iterate through and remove the variables with the highest p-values.
+From A, we start with removing numelec because it has the highest p-value and is \>0.05. Next, we remove numregime, then size, popn and lastly pctvote. We stop here since all p-values are \< 0.05 and thus are significant.
+The final model is:
+miltcoup=0.25138 + 0.09262*oligarchy - 0.57410*pollib + 0.02206*parties + error.
 
-```{r}
-glmcoups2 = glm(miltcoup~oligarchy+pollib+parties, family = poisson, data = data)
+Comparing the results to a), the step down approach model shows similar results, the same variables show a sifnificant effect on miltcoup.
+```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
+glmcoups2=glm(miltcoup~oligarchy+pollib+parties+pctvote+popn+size+numregim, family=poisson, data=data)
+#summary(glmcoups2) #numregime: 0.4264   
+
+glmcoups2=glm(miltcoup~oligarchy+pollib+parties+pctvote+popn+size, family=poisson, data=data)
+#summary(glmcoups2) #remove size: 0.42138    
+
+glmcoups2=glm(miltcoup~oligarchy+pollib+parties+pctvote+popn, family=poisson, data=data)
+#summary(glmcoups2) #remove popn: 0.2988
+
+glmcoups2=glm(miltcoup~oligarchy+pollib+parties+pctvote, family=poisson, data=data)
+#summary(glmcoups2) #remove pctvote: 0.1803
+
+glmcoups2=glm(miltcoup~oligarchy+pollib+parties, family=poisson, data=data)
 summary(glmcoups2)
 ```
 
-**C)** #Using the model from b), predict the number of coups for a hypothetical country for all the three levels of political liberalization and the (overall) averages of all the other (numerical) characteristics. Comment on your findings.
+**C)**
 
-The predicted average of coups per country increases as the policitical liberalization decreases.???
+The findings show that predicted average of coups per country increases as the political liberalization decreases.
 
 ```{r}
 avg1 =0.25138+0.09262*mean(data$oligarchy)-0.57410*0+0.02206*mean(data$parties)
