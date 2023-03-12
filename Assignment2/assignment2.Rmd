@@ -12,12 +12,14 @@ options(digits=3)
 
 ## Excersice 1
 
-**A)** The dataset "treeVolume" contains a response variable, namely "Volume", and several explanatory variables, including "type", "height", and "diameter". To investigate the impact of tree type on volume, we conducted ANOVA using "Volume" as the response variable and "type" as the sole explanatory variable. The p-value from the ANOVA table indicates that there is no significant effect of tree type on tree volume.
+**A)**
+
+The dataset "treeVolume" contains a response variable, namely "Volume", and several explanatory variables, including "type", "height", and "diameter". To investigate the impact of tree type on volume, we conducted ANOVA using "Volume" as the response variable and "type" as the sole explanatory variable. The p-value from the ANOVA table indicates that there is no significant effect of tree type on tree volume.
 
 ```{r}
 # Load the dataset
 tree_data <- read.csv("treeVolume.txt", header = TRUE, sep = "")
-# Perform t-test
+# Perform anova test
 model_aov <- aov(volume ~ type, data = tree_data)
 summary(model_aov)
 ```
@@ -37,50 +39,72 @@ The output of aggregate gives us the estimated volumes for the two tree types
 aggregate(tree_data$volume, by = list(tree_data$type), mean)
 ```
 
-**b)** To include diameter and height as explanatory variables into the analysis and investigate whether the influence of diameter and height on volume is similar for both tree types.
+**b)**
+
+To include diameter and height as explanatory variables into the analysis and investigate whether the influence of diameter and height on volume is similar for both tree types. The ANOVA table for the model with explanatory variables diameter and type shows that diameter has a highly significant effect on volume (p-value \< 2.2e-16), but there is no significant interaction between diameter and type (p-value = 0.47). This suggests that the influence of diameter on volume is similar for both beech and oak trees.
+
+The ANOVA table for the model with explanatory variables height and type shows that height has a highly significant effect on volume (p-value \< 2.2e-16), but there is no significant interaction between height and type (p-value = 0.18). This suggests that the influence of height on volume is similar for both beech and oak trees.
 
 ```{r}
-# Fit a linear model with diameter and height as explanatory variables
+# Fit a linear model with diameter, height, and type as explanatory variables
 model_lm <- lm(volume ~ diameter + height + type, data = tree_data)
-summary(model_lm)
+
+# Fit the model with diameter and type
+model <- lm(volume ~ diameter * type + height, data = tree_data)
+# Test the significance of the interaction term
+anova(model)
+
+# Fit the model with height and type
+model2 <- lm(volume ~ height * type + diameter, data = tree_data)
+# apply anova
+anova(model2)
 ```
 
-The below two ANOVA tables to investigate whether the influence of diameter and height on volume is similar for both tree types. In both cases, the interaction term is not significant, indicating that the influence of diameter and height on volume is similar for both tree types.
+Visualize the relationship between diameter, height, and volume for each tree type
 
 ```{r}
-# Perform ANOVA to investigate the influence of diameter on volume for both tree types
-model_aov_diameter <- aov(volume ~ diameter * type, data = tree_data)
-summary(model_aov_diameter)
-```
-
-```{r}
-# Perform ANOVA to investigate the influence of height on volume for both tree types
-model_aov_height <- aov(volume ~ height * type, data = tree_data)
-summary(model_aov_height)
+library(ggplot2)
+ggplot(data = tree_data, aes(x = diameter, y = volume, color = type)) + 
+  geom_point() +
+  labs(x = "Diameter", y = "Volume") +
+  facet_wrap(~type)
+ggplot(data = tree_data, aes(x = height, y = volume, color = type)) + 
+  geom_point() +
+  labs(x = "Height", y = "Volume") +
+  facet_wrap(~type)
 ```
 
 **c)**
 
-The correlation coefficient is 0.519, indicating a moderate positive linear relationship between diameter and height of beech trees. The p-value is less than 0.05, indicating that there is strong evidence of a significant correlation between diameter and height of beech trees.
-
-Whereas the correlation coefficient of oak trees is -0.116, indicating a weak negative linear relationship between diameter and height of oak trees. The p-value is greater than 0.05, indicating that there is not enough evidence to reject the null hypothesis of no correlation between diameter and height of oak trees.
+The coefficients for diameter and height are positive, indicating that there is a positive relationship between the tree's volume and its diameter and height. For every one unit increase in diameter, the predicted volume of the tree increases by 4.69806 units, and for every one unit increase in height, the predicted volume increases by 0.41725 units. The coefficient for "type" of the tree is -1.30460, but it is not statistically significant at the 0.05 level, as the p-value is 0.143. Therefore, we cannot conclude that the "type" of the tree has a significant effect on the tree's volume. the residual standard error, which is an estimate of the standard deviation of the errors, or the differences between the predicted values and the actual values. The lower the residual standard error, the better the model fits the data. The R-squared value is 0.9509, which means that the model explains 95.09% of the variance in the dependent variable. The F-statistic is 354.9, which is the ratio of the explained variance to the unexplained variance. The p-value for the F-statistic is less than 2.2e-16, indicating that the model is statistically significant overall.
 
 ```{r}
-par(mfrow=c(1, 2))
-plot(tree_data[tree_data$type == "beech", "diameter"],
-     tree_data[tree_data$type == "beech", "height"], 
-     xlab =  "beech * diameter", ylab = "beech * height")
-plot(tree_data[tree_data$type == "oak", "diameter"],
-     tree_data[tree_data$type == "oak", "height"], 
-     xlab =  "oak * diameter", ylab = "oak * height")
-
-cor.test(tree_data[tree_data$type == "beech", "diameter"],
-         tree_data[tree_data$type == "beech", "height"])
-cor.test(tree_data[tree_data$type == "oak", "diameter"], 
-         tree_data[tree_data$type == "oak", "height"])
+# Fit a linear model with diameter, height, and type as explanatory variables
+model_lm2 <- lm(volume ~ diameter + height + type, data = tree_data)
+summary(model_lm2)
 ```
 
-Using the results from b), we can investigate how diameter, height, and type influence volume. To predict the volume for a tree with the overall average diameter and height.
+investigate how diameter, height and type influence volume.
+
+```{r}
+# Plot the distribution of each variable
+par(mfrow = c(2, 2))
+hist(tree_data$diameter, main = "Diameter")
+hist(tree_data$height, main = "Height")
+hist(tree_data$volume, main = "Volume")
+plot(tree_data$diameter, tree_data$height, main = "Scatterplot of Diameter and Height", xlab = "Diameter", ylab = "Height")
+
+# Plot the relationship between diameter and volume
+plot(tree_data$diameter, tree_data$volume, main = "Scatterplot of Diameter and Volume", xlab = "Diameter", ylab = "Volume")
+
+# Plot the relationship between height and volume
+plot(tree_data$height, tree_data$volume, main = "Scatterplot of Height and Volume", xlab = "Height", ylab = "Volume")
+
+# Boxplot of volume by tree type
+boxplot(volume ~ type, data = tree_data, main = "Boxplot of Volume by Tree Type", xlab = "Tree Type", ylab = "Volume")
+```
+
+Predict the volume for a tree with the (overall) average diameter and height.
 
 ```{r}
 # Calculate the overall average diameter and height
