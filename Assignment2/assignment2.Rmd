@@ -48,15 +48,15 @@ The ANOVA table for the model with explanatory variables height and type shows t
 
 ```{r}
 # Fit a linear model with diameter, height, and type as explanatory variables
-model_lm <- lm(volume ~ diameter + height + type, data = tree_data)
+model_lm <- lm(volume ~ type + diameter + height, data = tree_data)
 
 # Fit the model with diameter and type
-model <- lm(volume ~ diameter * type + height, data = tree_data)
+model <- lm(volume ~ height + diameter*type  , data = tree_data)
 # Test the significance of the interaction term
 anova(model)
 
 # Fit the model with height and type
-model2 <- lm(volume ~ height * type + diameter, data = tree_data)
+model2 <- lm(volume ~ diameter + height*type , data = tree_data)
 # apply anova
 anova(model2)
 ```
@@ -77,11 +77,11 @@ ggplot(data = tree_data, aes(x = height, y = volume, color = type)) +
 
 **c)**
 
-The coefficients for diameter and height are positive, indicating that there is a positive relationship between the tree's volume and its diameter and height. For every one unit increase in diameter, the predicted volume of the tree increases by 4.69806 units, and for every one unit increase in height, the predicted volume increases by 0.41725 units. The coefficient for "type" of the tree is -1.30460, but it is not statistically significant at the 0.05 level, as the p-value is 0.143. Therefore, we cannot conclude that the "type" of the tree has a significant effect on the tree's volume. the residual standard error, which is an estimate of the standard deviation of the errors, or the differences between the predicted values and the actual values. The lower the residual standard error, the better the model fits the data. The R-squared value is 0.9509, which means that the model explains 95.09% of the variance in the dependent variable. The F-statistic is 354.9, which is the ratio of the explained variance to the unexplained variance. The p-value for the F-statistic is less than 2.2e-16, indicating that the model is statistically significant overall.
+The coefficients for diameter and height are positive, indicating that there is a positive relationship between the tree's volume and its diameter and height. For every one unit increase in diameter, the predicted volume of the tree increases by 4.69806 units, and for every one unit increase in height, the predicted volume increases by 0.41725 units. The coefficient for "type" of the tree is -1.30460, but it is not statistically significant at the 0.05 level, as the p-value is 0.14. Therefore, we cannot conclude that the "type" of the tree has a significant effect on the tree's volume. the residual standard error, which is an estimate of the standard deviation of the errors, or the differences between the predicted values and the actual values. The lower the residual standard error, the better the model fits the data. The R-squared value is 0.9509, which means that the model explains 95.09% of the variance in the dependent variable. The F-statistic is 355, which is the ratio of the explained variance to the unexplained variance. The p-value for the F-statistic is less than 2.2e-16, indicating that the model is statistically significant overall.
 
 ```{r}
 # Fit a linear model with diameter, height, and type as explanatory variables
-model_lm2 <- lm(volume ~ diameter + height + type, data = tree_data)
+model_lm2 <- lm(volume ~ type + diameter + height, data = tree_data)
 summary(model_lm2)
 ```
 
