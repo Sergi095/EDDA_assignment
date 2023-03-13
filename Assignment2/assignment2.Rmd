@@ -19,6 +19,7 @@ The dataset "treeVolume" contains a response variable, namely "Volume", and seve
 ```{r}
 # Load the dataset
 tree_data <- read.csv("treeVolume.txt", header = TRUE, sep = "")
+tree_data$type = as.factor(tree_data$type)
 # Perform anova test
 model_aov <- aov(volume ~ type, data = tree_data)
 summary(model_aov)
@@ -41,7 +42,7 @@ aggregate(tree_data$volume, by = list(tree_data$type), mean)
 
 **b)**
 
-To include diameter and height as explanatory variables into the analysis and investigate whether the influence of diameter and height on volume is similar for both tree types. The ANOVA table for the model with explanatory variables diameter and type shows that diameter has a highly significant effect on volume (p-value \< 2.2e-16), but there is no significant interaction between diameter and type (p-value = 0.47). This suggests that the influence of diameter on volume is similar for both beech and oak trees.
+Include diameter and height as explanatory variables into the analysis and investigate whether the influence of diameter and height on volume is similar for both tree types. The ANOVA table for the model with explanatory variables diameter and type shows that diameter has a highly significant effect on volume (p-value \< 2.2e-16), but there is no significant interaction between diameter and type (p-value = 0.47). This suggests that the influence of diameter on volume is similar for both beech and oak trees.
 
 The ANOVA table for the model with explanatory variables height and type shows that height has a highly significant effect on volume (p-value \< 2.2e-16), but there is no significant interaction between height and type (p-value = 0.18). This suggests that the influence of height on volume is similar for both beech and oak trees.
 
@@ -269,6 +270,8 @@ library(rmsb);
 
 ```{r}
 titanic_df <- read.table("titanic.txt", header=TRUE)
+titanic_df$PClass <- as.factor(titanic_df$PClass)
+titanic_df$Sex <- as.factor(titanic_df$Sex)
 s= xtabs(~Survived + PClass + Sex, titanic_df)
 plot(xtabs(~Survived + PClass + Sex, titanic_df))
 s
@@ -356,9 +359,8 @@ We could use Logistic Regression to model the probability of a certain passenger
 
 **D)**
 
-We want to test whether
-H0: row  variable  and  column variable  are  independent.
-The p-value is \, so we .... the H0.
+We want to test whether H0: row variable and column variable are independent. The p-value is , so we .... the H0.
+
 ```{r}
 conttest=xtabs(Survived~Sex+PClass, data=titanic_df)
 rowsums=apply(conttest,1,sum); colsums=apply(conttest,2,sum)
@@ -368,20 +370,15 @@ sum((conttest-expected)^2/expected)
 
 ```
 
-
 ```{r}
 #1-pchisq() #can someone check this one
 z=chisq.test(conttest)
 z
 ```
 
-
-**E)**
-Contingency tables are for checking independence or to check if distributions are homogeneous, so yes we would say it is wrong to use it for prediction.
+**E)** Contingency tables are for checking independence or to check if distributions are homogeneous, so yes we would say it is wrong to use it for prediction.
 
 An advantage and disadvantage of Logistic Regression and contingency tables relative to each other are .......
-
-
 
 ## Excersice 4
 
@@ -403,12 +400,10 @@ summary(glmcoups)
 
 **B)**
 
-We will use the step-down approach to reduce the number of explanatory variables. This means we keep the variables that have the most significant effect. Analyzing the summaries, we iterate through and remove the variables with the highest p-values.
-From A, we start with removing numelec because it has the highest p-value and is \>0.05. Next, we remove numregime, then size, popn and lastly pctvote. We stop here since all p-values are \< 0.05 and thus are significant.
-The final model is:
-miltcoup=0.25138 + 0.09262*oligarchy - 0.57410*pollib + 0.02206*parties + error.
+We will use the step-down approach to reduce the number of explanatory variables. This means we keep the variables that have the most significant effect. Analyzing the summaries, we iterate through and remove the variables with the highest p-values. From A, we start with removing numelec because it has the highest p-value and is \>0.05. Next, we remove numregime, then size, popn and lastly pctvote. We stop here since all p-values are \< 0.05 and thus are significant. The final model is: miltcoup=0.25138 + 0.09262*oligarchy - 0.57410*pollib + 0.02206\*parties + error.
 
 Comparing the results to a), the step down approach model shows similar results, the same variables show a sifnificant effect on miltcoup.
+
 ```{r, fig.width=6,fig.height=3.5,collapse=TRUE}
 glmcoups2=glm(miltcoup~oligarchy+pollib+parties+pctvote+popn+size+numregim, family=poisson, data=data)
 #summary(glmcoups2) #numregime: 0.4264   
