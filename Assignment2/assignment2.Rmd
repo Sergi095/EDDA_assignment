@@ -359,26 +359,26 @@ We could use Logistic Regression to model the probability of a certain passenger
 
 **D)**
 
-We want to test whether H0: row variable and column variable are independent. The p-value is , so we .... the H0.
+We want to test whether H0: row variable and column variable are independent. The p-values are \<0.05, so we reject the H0.
 
 ```{r}
-conttest=xtabs(Survived~Sex+PClass, data=titanic_df)
-rowsums=apply(conttest,1,sum); colsums=apply(conttest,2,sum)
-total=sum(conttest); expected=(rowsums%*%t(colsums))/total
-round(expected,0)
-sum((conttest-expected)^2/expected)
+contclass=xtabs(~PClass+Survived, data=titanic_df)
+contclass
 
+chisq.test(contclass)
 ```
 
 ```{r}
-#1-pchisq() #can someone check this one
-z=chisq.test(conttest)
-z
+contsex=xtabs(~Sex+Survived, data=titanic_df)
+contsex
+
+chisq.test(contsex)
 ```
 
-**E)** Contingency tables are for checking independence or to check if distributions are homogeneous, so yes we would say it is wrong to use it for prediction.
+**E)**
+Contingency tables are for checking independence or to check if distributions are homogeneous, so yes we would say it is not the best way for prediction.
 
-An advantage and disadvantage of Logistic Regression and contingency tables relative to each other are .......
+An advantage and disadvantage of Logistic Regression and contingency tables relative to each other are that contingency tables are easier compared to LR, but they lack the ability to model more complex relationships, which LR is able to do.
 
 ## Excersice 4
 
