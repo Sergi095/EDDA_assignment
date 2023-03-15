@@ -8,6 +8,7 @@ highlight: tango
 
 ```{r echo=FALSE}
 options(digits=3)
+options(repr.plot.width=4, repr.plot.height=4)
 ```
 
 ## Excersice 1
@@ -138,34 +139,30 @@ summary(model);
 
 **A)**
 
-It can be seen from the box plots, that there are some outliers that might be influential, and from the leverage vs residuals plots we can see that, this is indeed the case.
+From the Cook's distance plot we can see that there are some observations have a high influence on the model fit.
 
 ```{r}
 data <- read.csv("expensescrime.txt", header = TRUE, sep = " ")
-# scatterplots
-par(mfrow=c(3,2), mar=c(0.1,0.1,2,2))
-
-boxplot(data$bad, data = data, notch = TRUE, varwidth = TRUE, main = "Bad")
-boxplot(data$crime, data = data, notch = TRUE, varwidth = TRUE, main = "Crime")
-boxplot(data$lawyers, data = data, notch = TRUE, varwidth = TRUE, main = "Lawyers")
-boxplot(data$employ, data = data, notch = TRUE, varwidth = TRUE, main = "Employ")
-boxplot(data$pop, data = data, notch = TRUE, varwidth = TRUE, main = "pop")
-boxplot(data$expend, data = data, notch = TRUE, varwidth = TRUE, main = "Expend")
 ```
 
 ```{r}
-par(mfrow=c(2,2), mar=c(2,1,2,2))
-library(MASS)
-rlm_fit1 <- lm(data$expend~data$bad, data=data)
-rlm_fit2 <- lm(data$expend~data$crime, data=data)
-rlm_fit3 <- lm(data$expend~data$lawyers, data=data)
-rlm_fit4 <- lm(data$expend~data$employ, data=data)
-rlm_fit5 <- lm(data$expend~data$pop, data=data)
-plot(rlm_fit1)
-plot(rlm_fit2)
-plot(rlm_fit3)
-plot(rlm_fit4)
-plot(rlm_fit5)
+
+
+# Fit the linear model
+model <- lm(expend ~ bad + crime + lawyers + employ + pop, data = data)
+
+# Computing Cook's distance for every observation
+influence <- influence.measures(model)
+cooksd <- influence$infmat[, "cook.d"]
+
+# Cook's distance plot
+plot(cooksd, type = "o", pch = 20,
+     xlab = "Observation", ylab = "Cook's Distance", 
+     main = "Cook's Distance Plot")
+
+# threshold of Cook's distance
+abline(h = 4/length(model$residuals), col = "red", lty = 2)
+
 
 ```
 
@@ -176,14 +173,6 @@ library("reshape2")
 library('ggplot2')
 # calculate correlation matrix
 cor_matrix <- cor(data[, c("bad", "crime", "lawyers", "employ", "pop")])
-
-# plot correlation matrix
-ggplot(data = reshape2::melt(cor_matrix)) +
-  geom_tile(aes(x = Var1, y = Var2, fill = value)) +
-  scale_fill_gradient2(low = "blue", high = "red", midpoint = 0,
-                       name = "Correlation") +
-  theme_minimal() +
-  labs(title = "Correlation Matrix of Explanatory Variables")
 
 round(cor_matrix,2)
 pairs(cor_matrix)
