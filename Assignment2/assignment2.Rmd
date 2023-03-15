@@ -208,9 +208,9 @@ full_model.step <- stepAIC(full_model, direction="both")
 summary(full_model.step)
 ```
 
-**C)** pending question: can you improve the interval?
+**C)** 
 
-The interval is: \$ (-192.8264, 805.6644)\$
+The interval is: $ (-192.8264, 805.6644) $. In order to improve the accuracy of the prediction interval, we could explore alternative models by including additional variables, and evaluate if such models result in a reduction of the width of the prediction interval.
 
 ```{r}
 # create new data frame with hypothetical values
