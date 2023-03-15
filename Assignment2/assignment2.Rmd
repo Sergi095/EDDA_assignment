@@ -71,6 +71,7 @@ ggplot(data = tree_data, aes(x = diameter, y = volume, color = type)) +
   labs(x = "Diameter", y = "Volume") +
   facet_wrap(~type)
 ggplot(data = tree_data, aes(x = height, y = volume, color = type)) +
+  
   geom_point() +
   labs(x = "Height", y = "Volume") +
   facet_wrap(~type)
@@ -88,22 +89,31 @@ summary(model_lm2)
 
 investigate how diameter, height and type influence volume.
 
-```{r, fig.width=4, fig.height=4,collapse=TRUE}
+```{r, fig.width=8, fig.height=4,collapse=TRUE}
 # Plot the distribution of each variable
-par(mfrow = c(2, 2))
+par(mfrow = c(2, 4))
 hist(tree_data$diameter, main = "Diameter")
 hist(tree_data$height, main = "Height")
 hist(tree_data$volume, main = "Volume")
-plot(tree_data$diameter, tree_data$height, main = "Scatterplot of Diameter and Height", xlab = "Diameter", ylab = "Height")
+plot(tree_data$diameter, tree_data$height, main =
+       "Scatterplot of Diameter and Height", xlab =
+       "Diameter", ylab =
+       "Height")
 
 # Plot the relationship between diameter and volume
-plot(tree_data$diameter, tree_data$volume, main = "Scatterplot of Diameter and Volume", xlab = "Diameter", ylab = "Volume")
+plot(tree_data$diameter, tree_data$volume, main =
+       "Scatterplot of Diameter and Volume", xlab =
+       "Diameter", ylab = "Volume")
 
 # Plot the relationship between height and volume
-plot(tree_data$height, tree_data$volume, main = "Scatterplot of Height and Volume", xlab = "Height", ylab = "Volume")
+plot(tree_data$height, tree_data$volume, main =
+       "Scatterplot of Height and Volume", xlab =
+       "Height", ylab = "Volume")
 
 # Boxplot of volume by tree type
-boxplot(volume ~ type, data = tree_data, main = "Boxplot of Volume by Tree Type", xlab = "Tree Type", ylab = "Volume")
+boxplot(volume ~ type, data = tree_data, main =
+          "Boxplot of Volume by Tree Type", xlab =
+          "Tree Type", ylab = "Volume")
 ```
 
 Predict the volume for a tree with the (overall) average diameter and height.
@@ -114,7 +124,10 @@ avg_diameter <- mean(tree_data$diameter)
 avg_height <- mean(tree_data$height)
 
 # Predict the volume for a tree with the overall average diameter and height
-predict(model_lm, newdata = data.frame(diameter = avg_diameter, height = avg_height, type = "beech"), interval = "confidence")
+predict(model_lm, newdata = data.frame(diameter = avg_diameter,
+                                       height = avg_height, type =
+                                         "beech"), interval =
+          "confidence")
 ```
 
 **d)** It seems there may be a natural relationship between the volume of a tree and its height and diameter. One possible transformation to consider is taking the logarithm of both height and diameter to create new variables, which may better capture the relationship with volume.
@@ -124,12 +137,17 @@ Both models have high R-squared values, indicating that they explain a large pro
 ```{r, fig.width=3, fig.height=3,collapse=TRUE}
 
 # fit a linear model with the transformed variables
-transformed_model <- lm(log(volume) ~ log(tree_data$height) + log(tree_data$diameter) + type, data=tree_data)
+transformed_model <- lm(log(volume) ~ log(tree_data$height) +
+                          log(tree_data$diameter) + type,
+                        data=tree_data)
 # print the summary of the model to check the results
 summary(transformed_model);
 
 # fit a linear model with the transformed variables
-model <- lm(volume ~ tree_data$height + tree_data$diameter + type, data=tree_data)
+model <- lm(volume ~ tree_data$height +
+              tree_data$diameter
+            +type,
+            data=tree_data)
 # print the summary of the model to check the results
 summary(model);
 
@@ -243,16 +261,6 @@ mse.lasso=mean((y.test-y.pred)^2) #mse for the predicted test rows
 
 **A)**
 
-```{r, fig.width=3, fig.height=3,collapse=TRUE}
-# install.packages("rms",dependencies = TRUE)
-#install.packages("Hmisc")
-#
-library(ggplot2);
-library(Hmisc);
-library(rms);
-library(rmsb);
-
-```
 
 -   For female passengers, there are a total of 462 observations and no missing values. Out of the 462 female passengers, 143 did not survive and 319 survived. Out of the female passengers who did not survive, 9 were from the 1st class, 13 were from the 2nd class, and 132 were from the 3rd class. Out of the female passengers who survived, 134 were from the 1st class, 94 were from the 2nd class, and 80 were from the 3rd class.
 
@@ -268,6 +276,7 @@ s
 ```
 
 ```{r, fig.width=3, fig.height=3,collapse=TRUE}
+library('psych')
 options(prType='html')
 v <- c('PClass','Survived','Age','Sex')
 titanic <- titanic_df[, v]
@@ -276,6 +285,7 @@ describe(titanic)
 
 ```{r, fig.width=4, fig.height=5,collapse=TRUE}
 # # spar(ps=4,rt=3)spar
+library('rms')
 dd <- datadist(titanic_df)
 # describe distributions of variables to rms
 options(datadist='dd')
