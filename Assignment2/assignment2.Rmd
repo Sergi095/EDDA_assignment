@@ -17,7 +17,7 @@ options(repr.plot.width=4, repr.plot.height=4)
 
 The dataset "treeVolume" contains a response variable, namely "Volume", and several explanatory variables, including "type", "height", and "diameter". To investigate the impact of tree type on volume, we conducted ANOVA using "Volume" as the response variable and "type" as the sole explanatory variable. The p-value from the ANOVA table indicates that there is no significant effect of tree type on tree volume.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 # Load the dataset
 tree_data <- read.csv("treeVolume.txt", header = TRUE, sep = "")
 tree_data$type = as.factor(tree_data$type)
@@ -28,7 +28,7 @@ summary(model_aov)
 
 We conducted a t-test to compare the means of these two sample groups.the p-value of the t-test indicates that the type of tree does not have a significant impact on its volume.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 # Perform t-test
 t_test <- t.test(volume ~ type, data = tree_data)
 t_test
@@ -36,7 +36,7 @@ t_test
 
 The output of aggregate gives us the estimated volumes for the two tree types
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 # Estimate the volumes for the two tree types
 aggregate(tree_data$volume, by = list(tree_data$type), mean)
 ```
@@ -45,9 +45,9 @@ aggregate(tree_data$volume, by = list(tree_data$type), mean)
 
 Include diameter and height as explanatory variables into the analysis and investigate whether the influence of diameter and height on volume is similar for both tree types. The ANOVA table for the model with explanatory variables diameter and type shows that diameter has a highly significant effect on volume (p-value \< 2.2e-16), but there is no significant interaction between diameter and type (p-value = 0.47). This suggests that the influence of diameter on volume is similar for both beech and oak trees.
 
-The ANOVA table for the model with explanatory variables height and type shows that height has a highly significant effect on volume (p-value \< 2.2e-16), but there is no significant interaction between height and type (p-value = 0.18). This suggests that the influence of height on volume is similar for both beech and oak trees.
+The ANOVA table for the model with explanatory variables height and type shows that height has a highly significant effect on volume $(p-value < 2.2e^{-16})$, but there is no significant interaction between height and type (p-value = 0.18). This suggests that the influence of height on volume is similar for both beech and oak trees.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 # Fit a linear model with diameter, height, and type as explanatory variables
 model_lm <- lm(volume ~ type + diameter + height, data = tree_data)
 
@@ -64,7 +64,7 @@ anova(model2)
 
 Visualize the relationship between diameter, height, and volume for each tree type
 
-```{r}
+```{r, fig.width=3, fig.height=3}
 library(ggplot2)
 ggplot(data = tree_data, aes(x = diameter, y = volume, color = type)) +
   geom_point() +
@@ -80,7 +80,7 @@ ggplot(data = tree_data, aes(x = height, y = volume, color = type)) +
 
 The coefficients for diameter and height are positive, indicating that there is a positive relationship between the tree's volume and its diameter and height. For every one unit increase in diameter, the predicted volume of the tree increases by 4.69806 units, and for every one unit increase in height, the predicted volume increases by 0.41725 units. The coefficient for "type" of the tree is -1.30460, but it is not statistically significant at the 0.05 level, as the p-value is 0.14. Therefore, we cannot conclude that the "type" of the tree has a significant effect on the tree's volume. the residual standard error, which is an estimate of the standard deviation of the errors, or the differences between the predicted values and the actual values. The lower the residual standard error, the better the model fits the data. The R-squared value is 0.9509, which means that the model explains 95.09% of the variance in the dependent variable. The F-statistic is 355, which is the ratio of the explained variance to the unexplained variance. The p-value for the F-statistic is less than 2.2e-16, indicating that the model is statistically significant overall.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 # Fit a linear model with diameter, height, and type as explanatory variables
 model_lm2 <- lm(volume ~ type + diameter + height, data = tree_data)
 summary(model_lm2)
@@ -88,7 +88,7 @@ summary(model_lm2)
 
 investigate how diameter, height and type influence volume.
 
-```{r}
+```{r, fig.width=4, fig.height=4,collapse=TRUE}
 # Plot the distribution of each variable
 par(mfrow = c(2, 2))
 hist(tree_data$diameter, main = "Diameter")
@@ -108,7 +108,7 @@ boxplot(volume ~ type, data = tree_data, main = "Boxplot of Volume by Tree Type"
 
 Predict the volume for a tree with the (overall) average diameter and height.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 # Calculate the overall average diameter and height
 avg_diameter <- mean(tree_data$diameter)
 avg_height <- mean(tree_data$height)
@@ -121,7 +121,7 @@ predict(model_lm, newdata = data.frame(diameter = avg_diameter, height = avg_hei
 
 Both models have high R-squared values, indicating that they explain a large proportion of the variation in the response variable. However, the first model has a slightly higher R-squared value of 0.977 compared to the second model's (with no transformation) R-squared value of 0.951. This suggests that the first model may be a slightly better fit for the data.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 
 # fit a linear model with the transformed variables
 transformed_model <- lm(log(volume) ~ log(tree_data$height) + log(tree_data$diameter) + type, data=tree_data)
@@ -141,11 +141,11 @@ summary(model);
 
 From the Cook's distance plot we can see that there are some observations have a high influence on the model fit.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 data <- read.csv("expensescrime.txt", header = TRUE, sep = " ")
 ```
 
-```{r}
+```{r, fig.width=5, fig.height=3,collapse=TRUE}
 
 
 # Fit the linear model
@@ -168,7 +168,7 @@ abline(h = 4/length(model$residuals), col = "red", lty = 2)
 
 By looking at the correlation matrix, it can be seen that there are some multicollinearity problems, since the variable "bad" is highly correlated with other independent variables.
 
-```{r}
+```{r, fig.width=5, fig.height=3,collapse=TRUE}
 library("reshape2")
 library('ggplot2')
 # calculate correlation matrix
@@ -185,7 +185,7 @@ The setp-up method selects as best model: $\hat{e}=\beta_{0}+\beta_{1} \cdot bad
 
 where all coefficients are significant with at least $5\%$ level.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 library(MASS)
 
 # fit full model
@@ -201,7 +201,7 @@ summary(full_model.step)
 
 The interval is: $ (-192.8264, 805.6644) $. In order to improve the accuracy of the prediction interval, we could explore alternative models by including additional variables, and evaluate if such models result in a reduction of the width of the prediction interval.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 # create new data frame with hypothetical values
 new_data <- data.frame(bad=50, crime=5000, lawyers=5000, employ=5000, pop=5000)
 
@@ -216,8 +216,9 @@ pred
 
 Comparing the lasso model with the step-up model, the lasso model set the variables "bad" and "crime" to zero, which means that those variables are not important. As a result, we end up with a much simpler model.
 
-```{r}
+```{r, fig.width=5, fig.height=4,collapse=TRUE}
 set.seed(73) #sheldon prime !
+par(mfrow = c(2, 2))
 library(glmnet)
 x <- as.matrix(data[, c("bad", "crime", "lawyers", "employ", "pop")])
 y <- data$expend
@@ -242,7 +243,7 @@ mse.lasso=mean((y.test-y.pred)^2) #mse for the predicted test rows
 
 **A)**
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 # install.packages("rms",dependencies = TRUE)
 #install.packages("Hmisc")
 #
@@ -257,7 +258,7 @@ library(rmsb);
 
 -   For male passengers, there are a total of 851 observations and no missing values. Out of the 851 male passengers, 468 did not survive and 383 survived. Out of the male passengers who did not survive, 120 were from the 1st class, 148 were from the 2nd class, and 441 were from the 3rd class. Out of the male passengers who survived, 59 were from the 1st class, 25 were from the 2nd class, and 58 were from the 3rd class.
 
-```{r}
+```{r, fig.width=4, fig.height=4,collapse=TRUE}
 titanic_df <- read.table("titanic.txt", header=TRUE)
 titanic_df$PClass <- as.factor(titanic_df$PClass)
 titanic_df$Sex <- as.factor(titanic_df$Sex)
@@ -266,14 +267,14 @@ plot(xtabs(~Survived + PClass + Sex, titanic_df))
 s
 ```
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 options(prType='html')
 v <- c('PClass','Survived','Age','Sex')
 titanic <- titanic_df[, v]
 describe(titanic)
 ```
 
-```{r}
+```{r, fig.width=4, fig.height=5,collapse=TRUE}
 # # spar(ps=4,rt=3)spar
 dd <- datadist(titanic_df)
 # describe distributions of variables to rms
@@ -285,7 +286,7 @@ plot(s, main='', subtitles=FALSE)
 
 we can exponentiate their coefficients to get the odds ratios for survival. For example, the odds ratio for PClass2nd is exp(-1.29196) = 0.274, which suggests that passengers in second-class were 0.274 times as likely to survive as passengers in first-class. Similarly, the odds ratio for Age is exp(-0.03918) = 0.962, which means that for each one year increase in age, the odds of survival decrease by a factor of 0.962. The odds ratio for Sexmale is exp(-2.63136) = 0.072, which suggests that males were 0.072 times as likely to survive as females.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 model  <- glm(Survived ~ PClass + Age + Sex, data = titanic_df, family = binomial())
 exp(coef(model))
 
@@ -293,7 +294,7 @@ summary(model)
 
 ```
 
-```{r}
+```{r, fig.width=4, fig.height=3,collapse=TRUE}
 f <- lrm(Survived ~ Sex + PClass + rcs(Age,6), data=titanic_df)
 p <- Predict(f, Age, Sex, PClass, fun=plogis)
 plot <- ggplot(p)
@@ -303,21 +304,21 @@ plot + ggtitle("The predicted survival probability ")
 
 **B)** Investigate the interaction of predictor Age with PClass.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 model4 <-glm(Survived ~ Age*PClass, data = titanic_df, family = binomial)
 anova(model4, test="Chisq")
 ```
 
 Investigate the interaction of predictor Age with Sex.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 model5 <-glm(Survived ~ Age*Sex , data = titanic_df, family = binomial)
 anova(model5, test="Chisq")
 ```
 
 Based on the analysis of deviance tables, it appears that PClass, Sex, and the interaction between Age and Sex are significant predictors of survival in the given dataset. The p-value for PClass was extremely small, indicating a very strong association between PClass and survival. Similarly, the p-value for Sex was likely also very small, given that it was reported as significant in the analysis. The interaction between Age and Sex was also found to be a significant predictor, which suggests that the relationship between Age and survival may differ depending on the individual's sex.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 # Fit a logistic regression model
 model3 <- glm(Survived ~ PClass + Sex + Age:Sex, data = titanic_df, family = "binomial")
 summary(model3)
@@ -325,7 +326,7 @@ summary(model3)
 
 The table provides the survival probabilities for six different combinations of PClass, Sex, and Age, based on the model used to analyze the Titanic dataset. according to the table, a 55-year-old male passenger in 1st class had a survival probability of 0.1450, while a 55-year-old female passenger in 1st class had a much higher survival probability of 0.9474. Similarly, a 55-year-old male passenger in 3nd class had a very low survival probability of 0.0118, while a 55-year-old female passenger in 3nd class had a much higher survival probability of 0.5590.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 # Create a new dataset with all possible combinations of PClass, Sex, and Age
 newdata <- expand.grid(PClass = c("1st", "2nd", "3rd"),
                        Sex = c("male", "female"),
@@ -335,7 +336,7 @@ newdata$Survival_Probability <- predict(model3, newdata, type = "response")
 head(newdata)
 ```
 
-```{r}
+```{r, fig.width=5, fig.height=3,collapse=TRUE}
 p<- ggplot(newdata, aes(x = PClass, y = Survival_Probability, fill = Sex)) +
   geom_bar(stat = "identity", position = "dodge") +
   theme_bw()
@@ -350,14 +351,14 @@ We could use Logistic Regression to model the probability of a certain passenger
 
 We want to test whether H0: row variable and column variable are independent. The p-values are \<0.05, so we reject the H0.
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 contclass=xtabs(~PClass+Survived, data=titanic_df)
 contclass
 
 chisq.test(contclass)
 ```
 
-```{r}
+```{r, fig.width=3, fig.height=3,collapse=TRUE}
 contsex=xtabs(~Sex+Survived, data=titanic_df)
 contsex
 
@@ -377,7 +378,7 @@ We check for correlation between all pairs of variables.The plot shows that ther
 
 We perform Poisson regression and find that oligarchy, pollib and parties have a significant effect on miltcoup, because their p-values are \<0.05.
 
-```{r}
+```{r, fig.width=5, fig.height=5,collapse=TRUE}
 data=read.table(file= "coups.txt", header=TRUE)
 pairs(data[,-1])
 ```
