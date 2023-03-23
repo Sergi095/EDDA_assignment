@@ -3,7 +3,9 @@ This repository is dedicated to the Experimental Design and Data Analysis (EDDA)
 
 The repository was developed in R programming language, and contributors include:
 
-[Ikramez](https://github.com/ikramez) \\
-[Mohammed-majeed](https://github.com/Mohammed-majeed) \\
-[Sergi095](https://github.com/Sergi095) \\
+[Ikramez](https://github.com/ikramez) \
+
+[Mohammed-majeed](https://github.com/Mohammed-majeed) \
+
+[Sergi095](https://github.com/Sergi095) \
 
